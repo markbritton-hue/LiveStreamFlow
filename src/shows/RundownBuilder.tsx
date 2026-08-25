@@ -79,6 +79,11 @@ export default function RundownBuilder({ show }: { show: Show }) {
       ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
+  function handleSetCurrent(segmentId: string) {
+    setCurrentSegmentId(segmentId)
+    scrollToSegment(segmentId)
+  }
+
   useEffect(() => {
     if (sectionsLoading || creatingDefault || sections.length > 0) return
     setCreatingDefault(true)
@@ -230,6 +235,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 assetsFolderUrl={show.assetsFolderUrl}
                 liveMode={liveMode}
                 currentSegmentId={currentSegmentId}
+                onSetCurrent={handleSetCurrent}
               />
             ))
           )}

@@ -18,6 +18,7 @@ export default function SectionBlock({
   assetsFolderUrl,
   liveMode = false,
   currentSegmentId,
+  onSetCurrent,
 }: {
   showId: string
   section: Section
@@ -29,6 +30,7 @@ export default function SectionBlock({
   assetsFolderUrl?: string
   liveMode?: boolean
   currentSegmentId?: string | null
+  onSetCurrent?: (segmentId: string) => void
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [title, setTitle] = useState(section.title)
@@ -107,6 +109,7 @@ export default function SectionBlock({
                     assetsFolderUrl={assetsFolderUrl}
                     liveMode={liveMode}
                     isCurrent={liveMode && segment.id === currentSegmentId}
+                    onSetCurrent={onSetCurrent}
                   />
                 </div>
               ))}

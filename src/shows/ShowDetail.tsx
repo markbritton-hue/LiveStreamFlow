@@ -80,14 +80,6 @@ export default function ShowDetail() {
                 {segments.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)} /{' '}
                 {show.targetDurationMinutes} min
               </div>
-              {(show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
-                <div className="show-card-row">
-                  <span className="show-card-icon">👥</span>
-                  {show.teamMembers.length > 0 && `${show.teamMembers.length} team`}
-                  {show.teamMembers.length > 0 && show.guestEmails.length > 0 && ' · '}
-                  {show.guestEmails.length > 0 && `${show.guestEmails.length} guest`}
-                </div>
-              )}
             </div>
           </div>
 

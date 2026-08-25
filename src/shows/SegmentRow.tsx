@@ -34,6 +34,7 @@ export default function SegmentRow({
   assetsFolderUrl,
   liveMode = false,
   isCurrent = false,
+  onSetCurrent,
 }: {
   showId: string
   segment: Segment
@@ -42,6 +43,7 @@ export default function SegmentRow({
   assetsFolderUrl?: string
   liveMode?: boolean
   isCurrent?: boolean
+  onSetCurrent?: (segmentId: string) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
@@ -116,9 +118,20 @@ export default function SegmentRow({
     return (
       <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
         <div className="timeline-rail">
-          <span className="timeline-dot type-divider" title="Section">
-            <SegmentTypeIcon type="divider" size={22} />
-          </span>
+          {liveMode ? (
+            <button
+              type="button"
+              className="timeline-dot type-divider timeline-dot-button"
+              title="Jump to here"
+              onClick={() => onSetCurrent?.(segment.id)}
+            >
+              <SegmentTypeIcon type="divider" size={22} />
+            </button>
+          ) : (
+            <span className="timeline-dot type-divider" title="Section">
+              <SegmentTypeIcon type="divider" size={22} />
+            </span>
+          )}
           <span className="timeline-line" />
         </div>
 
@@ -152,9 +165,20 @@ export default function SegmentRow({
   return (
     <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
       <div className="timeline-rail">
-        <span className={`timeline-dot type-${segment.type}`} title={SEGMENT_TYPE_LABELS[segment.type]}>
-          <SegmentTypeIcon type={segment.type} size={26} />
-        </span>
+        {liveMode ? (
+          <button
+            type="button"
+            className={`timeline-dot type-${segment.type} timeline-dot-button`}
+            title="Jump to here"
+            onClick={() => onSetCurrent?.(segment.id)}
+          >
+            <SegmentTypeIcon type={segment.type} size={26} />
+          </button>
+        ) : (
+          <span className={`timeline-dot type-${segment.type}`} title={SEGMENT_TYPE_LABELS[segment.type]}>
+            <SegmentTypeIcon type={segment.type} size={26} />
+          </span>
+        )}
         <span className="timeline-line" />
       </div>
 
