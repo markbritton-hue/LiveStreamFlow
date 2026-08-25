@@ -10,7 +10,7 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import { durationToMinutes, SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
+import { SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
 import { addSegment, reorderSegments, useSegments } from './useSegments'
 import { createSection, useSections } from './useSections'
 import SectionBlock from './SectionBlock'
@@ -29,8 +29,6 @@ export default function RundownBuilder({ show }: { show: Show }) {
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
   const [overId, setOverId] = useState<string | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
-
-  const totalMinutes = segments.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)
 
   useEffect(() => {
     if (sectionsLoading || creatingDefault || sections.length > 0) return
@@ -142,18 +140,6 @@ export default function RundownBuilder({ show }: { show: Show }) {
         <BlockPalette />
 
         <div className="rundown-builder">
-          <div className="rundown-summary">
-            <span>
-              Total: {totalMinutes} / {show.targetDurationMinutes} min
-            </span>
-            {totalMinutes > show.targetDurationMinutes && (
-              <span className="over-time">
-                {' '}
-                — over target by {totalMinutes - show.targetDurationMinutes} min
-              </span>
-            )}
-          </div>
-
           {loading ? (
             <p>Loading rundown…</p>
           ) : (
