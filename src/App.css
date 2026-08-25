@@ -751,7 +751,7 @@
 
 .block-header {
   display: grid;
-  grid-template-columns: 20px 18px 2fr 1fr 110px 20px 24px;
+  grid-template-columns: 20px 24px 2fr 1fr 110px 20px 24px;
   gap: 6px;
   align-items: center;
 }
@@ -773,9 +773,10 @@
   background: none;
   border: none;
   color: var(--text);
-  font-size: 12px;
+  font-size: 20px;
+  line-height: 1;
   padding: 0;
-  width: 18px;
+  width: 24px;
 }
 
 .block-collapsed {
