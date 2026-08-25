@@ -30,11 +30,13 @@ export default function SegmentRow({
   segment,
   sections,
   onDuplicate,
+  assetsFolderUrl,
 }: {
   showId: string
   segment: Segment
   sections: Section[]
   onDuplicate?: () => void
+  assetsFolderUrl?: string
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
@@ -290,6 +292,17 @@ export default function SegmentRow({
                 Open
               </a>
             )}
+            {assetsFolderUrl && (
+              <a
+                className="asset-folder-link"
+                href={assetsFolderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open assets folder"
+              >
+                📁
+              </a>
+            )}
             {mediaThumbnail && (
               <button
                 type="button"
@@ -370,6 +383,17 @@ export default function SegmentRow({
               {assetUrl && (
                 <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                   Open
+                </a>
+              )}
+              {assetsFolderUrl && (
+                <a
+                  className="asset-folder-link"
+                  href={assetsFolderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open assets folder"
+                >
+                  📁
                 </a>
               )}
               {sections.length > 1 && (

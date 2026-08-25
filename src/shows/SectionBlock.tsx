@@ -15,6 +15,7 @@ export default function SectionBlock({
   dropBeforeId,
   readyFilter = 'all',
   assetFilter = 'all',
+  assetsFolderUrl,
 }: {
   showId: string
   section: Section
@@ -23,6 +24,7 @@ export default function SectionBlock({
   dropBeforeId?: string | null
   readyFilter?: ReadyFilter
   assetFilter?: AssetFilter
+  assetsFolderUrl?: string
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [title, setTitle] = useState(section.title)
@@ -98,6 +100,7 @@ export default function SectionBlock({
                     segment={segment}
                     sections={sections}
                     onDuplicate={() => handleDuplicate(segment)}
+                    assetsFolderUrl={assetsFolderUrl}
                   />
                 </div>
               ))}

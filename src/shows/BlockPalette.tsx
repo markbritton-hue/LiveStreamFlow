@@ -25,9 +25,19 @@ function PaletteChip({ type }: { type: SegmentType }) {
   )
 }
 
-export default function BlockPalette() {
+export default function BlockPalette({ assetsFolderUrl }: { assetsFolderUrl?: string }) {
   return (
     <div className="block-palette">
+      {assetsFolderUrl && (
+        <a
+          href={assetsFolderUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="assets-folder-link"
+        >
+          📁 Open Assets Folder
+        </a>
+      )}
       <span className="block-palette-label">Drag a block in:</span>
       {TYPES.map((type) => (
         <PaletteChip key={type} type={type} />

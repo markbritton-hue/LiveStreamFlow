@@ -141,7 +141,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
       onDragCancel={handleDragCancel}
     >
       <div className="rundown-layout">
-        <BlockPalette />
+        <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />
 
         <div className="rundown-builder">
           <RundownFilterBar
@@ -164,6 +164,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 dropBeforeId={activeDrag?.source === 'palette' ? overId : null}
                 readyFilter={readyFilter}
                 assetFilter={assetFilter}
+                assetsFolderUrl={show.assetsFolderUrl}
               />
             ))
           )}
