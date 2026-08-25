@@ -854,6 +854,7 @@
   display: grid;
   grid-template-columns: 40px 1fr;
   gap: 12px;
+  margin-bottom: 14px;
 }
 
 .timeline-rail {
@@ -903,7 +904,6 @@
   width: 100%;
   min-width: 0;
   padding: 0 8px;
-  margin-bottom: 8px;
   border-radius: 6px;
   background: #d9d9df;
   color: #1f2023;
@@ -943,7 +943,6 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px;
-  margin-bottom: 14px;
   color: var(--text-h);
 }
 
