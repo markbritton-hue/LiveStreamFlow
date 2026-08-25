@@ -91,21 +91,8 @@ export default function ShowDetail() {
             </div>
           </div>
 
-          {(show.notes ||
-            show.teamMembers.length > 0 ||
-            show.guestEmails.length > 0 ||
-            show.assetsFolderUrl) && (
+          {(show.notes || show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
             <div className="show-info-panel">
-              {show.assetsFolderUrl && (
-                <div className="show-info-row">
-                  <span className="show-info-label">Assets</span>
-                  <p>
-                    <a href={show.assetsFolderUrl} target="_blank" rel="noopener noreferrer">
-                      {show.assetsFolderUrl}
-                    </a>
-                  </p>
-                </div>
-              )}
               {show.notes && (
                 <div className="show-info-row">
                   <span className="show-info-label">Notes</span>
