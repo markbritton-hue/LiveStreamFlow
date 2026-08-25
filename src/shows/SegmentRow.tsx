@@ -45,6 +45,7 @@ export default function SegmentRow({
   isCurrent?: boolean
   onSetCurrent?: (segmentId: string) => void
 }) {
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
     disabled: liveMode,
@@ -253,17 +254,34 @@ export default function SegmentRow({
           />
 
           <span className="block-header-thumb-slot">
-            {(isGraphicBlock || isVideoBlock) && mediaThumbnail && (
-              <button
-                type="button"
-                className="block-header-thumb-button"
-                onClick={() => setShowImagePreview(true)}
-                aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
-              >
-                <img src={mediaThumbnail} alt="" className="block-header-thumb" />
-                {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
-              </button>
-            )}
+            {(isGraphicBlock || isVideoBlock) &&
+              mediaThumbnail &&
+              (failedImageUrl === mediaThumbnail ? (
+                <a
+                  href={assetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block-header-thumb-fallback"
+                  title="Thumbnail unavailable — click to open the file"
+                >
+                  ⚠️
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="block-header-thumb-button"
+                  onClick={() => setShowImagePreview(true)}
+                  aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
+                >
+                  <img
+                    src={mediaThumbnail}
+                    alt=""
+                    className="block-header-thumb"
+                    onError={() => setFailedImageUrl(mediaThumbnail)}
+                  />
+                  {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
+                </button>
+              ))}
           </span>
 
           <label className="ready-checkbox-label" title="Mark ready">
@@ -364,17 +382,27 @@ export default function SegmentRow({
                 📁
               </button>
             )}
-            {mediaThumbnail && (
-              <button
-                type="button"
-                className="block-asset-preview block-asset-preview-button"
-                onClick={() => setShowImagePreview(true)}
-                aria-label={isVideoBlock ? 'Play video' : 'View full image'}
-              >
-                <img src={mediaThumbnail} alt={segment.title} loading="lazy" />
-                {isVideoBlock && <span className="block-asset-preview-play">▶</span>}
-              </button>
-            )}
+            {mediaThumbnail &&
+              (failedImageUrl === mediaThumbnail ? (
+                <p className="thumbnail-fallback-hint">
+                  ⚠️ Thumbnail unavailable — the file may not be shared as "Anyone with the link."
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  className="block-asset-preview block-asset-preview-button"
+                  onClick={() => setShowImagePreview(true)}
+                  aria-label={isVideoBlock ? 'Play video' : 'View full image'}
+                >
+                  <img
+                    src={mediaThumbnail}
+                    alt={segment.title}
+                    loading="lazy"
+                    onError={() => setFailedImageUrl(mediaThumbnail)}
+                  />
+                  {isVideoBlock && <span className="block-asset-preview-play">▶</span>}
+                </button>
+              ))}
 
             {isVideoBlock && (
               <textarea
@@ -483,11 +511,21 @@ export default function SegmentRow({
             {assetUrl &&
               (assetType === 'image' ||
                 assetUrl.includes('drive.google.com') ||
-                assetUrl.includes('dropbox.com')) && (
+                assetUrl.includes('dropbox.com')) &&
+              (failedImageUrl === getImageDisplayUrl(assetUrl) ? (
+                <p className="thumbnail-fallback-hint">
+                  ⚠️ Thumbnail unavailable — the file may not be shared as "Anyone with the link."
+                </p>
+              ) : (
                 <div className="block-asset-preview">
-                  <img src={getImageDisplayUrl(assetUrl)} alt={segment.title} loading="lazy" />
+                  <img
+                    src={getImageDisplayUrl(assetUrl)}
+                    alt={segment.title}
+                    loading="lazy"
+                    onError={() => setFailedImageUrl(getImageDisplayUrl(assetUrl))}
+                  />
                 </div>
-              )}
+              ))}
           </>
         )}
       </div>
