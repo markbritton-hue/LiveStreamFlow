@@ -5,13 +5,13 @@ import {
   detectAssetType,
   getImageDisplayUrl,
   getVideoThumbnail,
-  SEGMENT_TYPE_ICONS,
   SEGMENT_TYPE_LABELS,
   type Section,
   type Segment,
   type SegmentType,
 } from '../types'
 import { deleteSegment, updateSegment } from './useSegments'
+import SegmentTypeIcon from './SegmentTypeIcon'
 
 const TYPES = Object.keys(SEGMENT_TYPE_LABELS) as SegmentType[]
 
@@ -79,7 +79,7 @@ export default function SegmentRow({
     <div ref={setNodeRef} style={style} className="timeline-item">
       <div className="timeline-rail">
         <span className={`timeline-dot type-${segment.type}`} title={SEGMENT_TYPE_LABELS[segment.type]}>
-          {SEGMENT_TYPE_ICONS[segment.type]}
+          <SegmentTypeIcon type={segment.type} size={26} />
         </span>
         <span className="timeline-line" />
       </div>

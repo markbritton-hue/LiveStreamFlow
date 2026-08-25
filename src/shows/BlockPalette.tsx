@@ -1,5 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
-import { SEGMENT_TYPE_ICONS, SEGMENT_TYPE_LABELS, type SegmentType } from '../types'
+import { SEGMENT_TYPE_LABELS, type SegmentType } from '../types'
+import SegmentTypeIcon from './SegmentTypeIcon'
 
 const TYPES = Object.keys(SEGMENT_TYPE_LABELS) as SegmentType[]
 
@@ -18,7 +19,8 @@ function PaletteChip({ type }: { type: SegmentType }) {
       {...attributes}
       {...listeners}
     >
-      {SEGMENT_TYPE_ICONS[type]} {SEGMENT_TYPE_LABELS[type]}
+      <SegmentTypeIcon type={type} size={18} className="palette-chip-icon" />
+      {SEGMENT_TYPE_LABELS[type]}
     </button>
   )
 }

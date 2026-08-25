@@ -10,17 +10,12 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import {
-  durationToMinutes,
-  SEGMENT_TYPE_ICONS,
-  SEGMENT_TYPE_LABELS,
-  type SegmentType,
-  type Show,
-} from '../types'
+import { durationToMinutes, SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
 import { addSegment, reorderSegments, useSegments } from './useSegments'
 import { createSection, useSections } from './useSections'
 import SectionBlock from './SectionBlock'
 import BlockPalette from './BlockPalette'
+import SegmentTypeIcon from './SegmentTypeIcon'
 
 interface DragData {
   source?: 'palette'
@@ -182,7 +177,8 @@ export default function RundownBuilder({ show }: { show: Show }) {
       <DragOverlay>
         {activeDrag?.source === 'palette' && activeDrag.segmentType ? (
           <div className={`palette-chip type-${activeDrag.segmentType} palette-chip-overlay`}>
-            {SEGMENT_TYPE_ICONS[activeDrag.segmentType]} {SEGMENT_TYPE_LABELS[activeDrag.segmentType]}
+            <SegmentTypeIcon type={activeDrag.segmentType} size={18} className="palette-chip-icon" />
+            {SEGMENT_TYPE_LABELS[activeDrag.segmentType]}
           </div>
         ) : null}
       </DragOverlay>

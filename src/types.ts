@@ -32,18 +32,6 @@ export const SEGMENT_TYPE_LABELS: Record<SegmentType, string> = {
   other: 'Other',
 }
 
-export const SEGMENT_TYPE_ICONS: Record<SegmentType, string> = {
-  'host-script': '🗣️',
-  video: '📹',
-  graphic: '🎨',
-  music: '🎧',
-  'camera-shot': '🎥',
-  lighting: '🔦',
-  transition: '🔀',
-  note: '⚠️',
-  other: '⬛',
-}
-
 export type AssetType = 'image' | 'video' | 'doc' | 'link' | 'none'
 
 export interface Section {
