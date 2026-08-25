@@ -32,15 +32,20 @@ export default function SegmentRow({
   sections,
   onDuplicate,
   assetsFolderUrl,
+  liveMode = false,
+  isCurrent = false,
 }: {
   showId: string
   segment: Segment
   sections: Section[]
   onDuplicate?: () => void
   assetsFolderUrl?: string
+  liveMode?: boolean
+  isCurrent?: boolean
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
+    disabled: liveMode,
   })
   const [expanded, setExpanded] = useState(false)
   const [showImagePreview, setShowImagePreview] = useState(false)
@@ -109,7 +114,7 @@ export default function SegmentRow({
 
   if (segment.type === 'divider') {
     return (
-      <div ref={setNodeRef} style={style} className="timeline-item">
+      <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
         <div className="timeline-rail">
           <span className="timeline-dot type-divider" title="Section">
             <SegmentTypeIcon type="divider" size={22} />
@@ -117,8 +122,12 @@ export default function SegmentRow({
           <span className="timeline-line" />
         </div>
 
-        <div className="divider-bar">
-          <span className="drag-handle" {...attributes} {...listeners}>
+        <div className={`divider-bar${isCurrent ? ' block-live-current' : ''}`}>
+          <span
+            className={`drag-handle${liveMode ? ' drag-handle-disabled' : ''}`}
+            {...attributes}
+            {...listeners}
+          >
             ⠿
           </span>
           <input
@@ -141,7 +150,7 @@ export default function SegmentRow({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="timeline-item">
+    <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
       <div className="timeline-rail">
         <span className={`timeline-dot type-${segment.type}`} title={SEGMENT_TYPE_LABELS[segment.type]}>
           <SegmentTypeIcon type={segment.type} size={26} />
@@ -150,12 +159,16 @@ export default function SegmentRow({
       </div>
 
       <div
-        className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}`}
+        className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}${isCurrent ? ' block-live-current' : ''}`}
       >
         {segment.ready && <span className="ready-badge">✓ Ready</span>}
 
         <div className="block-header">
-          <span className="drag-handle" {...attributes} {...listeners}>
+          <span
+            className={`drag-handle${liveMode ? ' drag-handle-disabled' : ''}`}
+            {...attributes}
+            {...listeners}
+          >
             ⠿
           </span>
 

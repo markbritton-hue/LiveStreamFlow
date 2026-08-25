@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -18,6 +18,7 @@ import SectionBlock from './SectionBlock'
 import BlockPalette from './BlockPalette'
 import SegmentTypeIcon from './SegmentTypeIcon'
 import RundownFilterBar from './RundownFilterBar'
+import LiveModeBar from './LiveModeBar'
 
 interface DragData {
   source?: 'palette'
@@ -32,7 +33,51 @@ export default function RundownBuilder({ show }: { show: Show }) {
   const [overId, setOverId] = useState<string | null>(null)
   const [readyFilter, setReadyFilter] = useState<ReadyFilter>('all')
   const [assetFilter, setAssetFilter] = useState<AssetFilter>('all')
+  const [liveMode, setLiveMode] = useState(false)
+  const [currentSegmentId, setCurrentSegmentId] = useState<string | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+
+  const flattenedSegments = useMemo(() => {
+    const orderedSections = [...sections].sort((a, b) => a.order - b.order)
+    return orderedSections.flatMap((section) =>
+      segments
+        .filter((s) => s.sectionId === section.id)
+        .sort((a, b) => a.order - b.order),
+    )
+  }, [sections, segments])
+
+  const currentIndex = flattenedSegments.findIndex((s) => s.id === currentSegmentId)
+
+  function handleStartLive() {
+    setLiveMode(true)
+    setCurrentSegmentId(flattenedSegments[0]?.id ?? null)
+    requestAnimationFrame(() => scrollToSegment(flattenedSegments[0]?.id))
+  }
+
+  function handleExitLive() {
+    setLiveMode(false)
+  }
+
+  function handlePrev() {
+    if (currentIndex <= 0) return
+    const target = flattenedSegments[currentIndex - 1]
+    setCurrentSegmentId(target.id)
+    scrollToSegment(target.id)
+  }
+
+  function handleNext() {
+    if (currentIndex === -1 || currentIndex >= flattenedSegments.length - 1) return
+    const target = flattenedSegments[currentIndex + 1]
+    setCurrentSegmentId(target.id)
+    scrollToSegment(target.id)
+  }
+
+  function scrollToSegment(segmentId?: string) {
+    if (!segmentId) return
+    document
+      .getElementById(`segment-${segmentId}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
 
   useEffect(() => {
     if (sectionsLoading || creatingDefault || sections.length > 0) return
@@ -45,6 +90,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
   }
 
   function handleDragStart(event: DragStartEvent) {
+    if (liveMode) return
     setActiveDrag((event.active.data.current as DragData) ?? null)
   }
 
@@ -60,6 +106,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
   async function handleDragEnd(event: DragEndEvent) {
     setActiveDrag(null)
     setOverId(null)
+    if (liveMode) return
     const { active, over } = event
     if (!over) return
 
@@ -141,9 +188,25 @@ export default function RundownBuilder({ show }: { show: Show }) {
       onDragCancel={handleDragCancel}
     >
       <div className="rundown-layout">
-        <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />
+        {!liveMode && <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />}
 
         <div className="rundown-builder">
+          <LiveModeBar
+            liveMode={liveMode}
+            onStart={handleStartLive}
+            onExit={handleExitLive}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onJumpToCurrent={() => scrollToSegment(currentSegmentId ?? undefined)}
+            canGoPrev={currentIndex > 0}
+            canGoNext={currentIndex !== -1 && currentIndex < flattenedSegments.length - 1}
+            positionLabel={
+              currentIndex !== -1
+                ? `Block ${currentIndex + 1} of ${flattenedSegments.length}: ${flattenedSegments[currentIndex].title}`
+                : null
+            }
+          />
+
           <RundownFilterBar
             readyFilter={readyFilter}
             onReadyFilterChange={setReadyFilter}
@@ -165,13 +228,17 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 readyFilter={readyFilter}
                 assetFilter={assetFilter}
                 assetsFolderUrl={show.assetsFolderUrl}
+                liveMode={liveMode}
+                currentSegmentId={currentSegmentId}
               />
             ))
           )}
 
-          <button type="button" className="new-section-button" onClick={handleAddSection}>
-            + Add Section
-          </button>
+          {!liveMode && (
+            <button type="button" className="new-section-button" onClick={handleAddSection}>
+              + Add Section
+            </button>
+          )}
         </div>
       </div>
 

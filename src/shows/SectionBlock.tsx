@@ -16,6 +16,8 @@ export default function SectionBlock({
   readyFilter = 'all',
   assetFilter = 'all',
   assetsFolderUrl,
+  liveMode = false,
+  currentSegmentId,
 }: {
   showId: string
   section: Section
@@ -25,6 +27,8 @@ export default function SectionBlock({
   readyFilter?: ReadyFilter
   assetFilter?: AssetFilter
   assetsFolderUrl?: string
+  liveMode?: boolean
+  currentSegmentId?: string | null
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [title, setTitle] = useState(section.title)
@@ -101,6 +105,8 @@ export default function SectionBlock({
                     sections={sections}
                     onDuplicate={() => handleDuplicate(segment)}
                     assetsFolderUrl={assetsFolderUrl}
+                    liveMode={liveMode}
+                    isCurrent={liveMode && segment.id === currentSegmentId}
                   />
                 </div>
               ))}

@@ -53,6 +53,104 @@
   min-width: 0;
 }
 
+/* Live mode */
+
+.live-mode-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.live-mode-start-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #d32f2f;
+  color: #fff;
+  font-weight: 700;
+}
+
+.live-mode-start-button:hover {
+  background: #b71c1c;
+}
+
+.live-mode-bar.live-mode-active {
+  border-color: #d32f2f;
+  background: color-mix(in srgb, #d32f2f 8%, var(--surface));
+}
+
+.live-badge {
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 13px;
+  color: #d32f2f;
+  letter-spacing: 0.04em;
+}
+
+.live-position {
+  flex: 1;
+  min-width: 120px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.live-mode-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.live-mode-controls button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.live-mode-controls button:hover:not(:disabled) {
+  border-color: #d32f2f;
+  color: #d32f2f;
+}
+
+.live-mode-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.live-mode-exit-button {
+  background: #d32f2f !important;
+  border-color: #d32f2f !important;
+  color: #fff !important;
+}
+
+.live-mode-exit-button:hover {
+  background: #b71c1c !important;
+}
+
+.block-live-current {
+  border: 3px solid #d32f2f !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #d32f2f 25%, transparent);
+}
+
+.drag-handle-disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
 /* Rundown filter bar */
 
 .rundown-filter-bar {
