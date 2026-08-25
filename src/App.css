@@ -712,7 +712,7 @@
 
 .block[class*='type-'] {
   border-left-color: var(--type-color, var(--border));
-  background: color-mix(in srgb, var(--type-color, var(--surface)) 6%, var(--surface));
+  background: color-mix(in srgb, var(--type-color, var(--surface)) 18%, var(--surface));
 }
 
 .timeline-dot[class*='type-'] {
