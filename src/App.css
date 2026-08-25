@@ -1003,11 +1003,11 @@
 .block[class*='type-'] {
   position: relative;
   border-left-color: var(--type-color, var(--border));
-  background: var(--surface);
+  background: color-mix(in srgb, var(--type-color, var(--surface)) 12%, var(--surface));
 }
 
 .block-live-dimmed[class*='type-'] {
-  background: var(--surface);
+  background: color-mix(in srgb, var(--type-color, var(--surface)) 6%, var(--surface));
   color: var(--text);
 }
 
