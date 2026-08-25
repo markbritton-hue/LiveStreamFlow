@@ -1,0 +1,18 @@
+import { useEffect, useState } from 'react'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase'
+import type { Show } from '../types'
+
+export function useShow(showId: string) {
+  const [show, setShow] = useState<Show | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    return onSnapshot(doc(db, 'shows', showId), (snap) => {
+      setShow(snap.exists() ? ({ id: snap.id, ...snap.data() } as Show) : null)
+      setLoading(false)
+    })
+  }, [showId])
+
+  return { show, loading }
+}

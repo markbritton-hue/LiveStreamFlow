@@ -1,0 +1,75 @@
+import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider'
+import { createShow, useShows } from './useShows'
+
+export default function ShowsList() {
+  const { shows, loading } = useShows()
+  const { user } = useAuth()
+  const [title, setTitle] = useState('')
+  const [scheduledAt, setScheduledAt] = useState('')
+  const [targetDurationMinutes, setTargetDurationMinutes] = useState(60)
+
+  async function handleCreate(e: FormEvent) {
+    e.preventDefault()
+    if (!title || !scheduledAt || !user) return
+    await createShow({
+      title,
+      scheduledAt,
+      targetDurationMinutes,
+      createdBy: user.email ?? user.uid,
+    })
+    setTitle('')
+    setScheduledAt('')
+    setTargetDurationMinutes(60)
+  }
+
+  return (
+    <div className="shows-list">
+      <h1>Shows</h1>
+
+      <form onSubmit={handleCreate} className="new-show-form">
+        <input
+          placeholder="Show title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <input
+          type="datetime-local"
+          value={scheduledAt}
+          onChange={(e) => setScheduledAt(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          min={1}
+          value={targetDurationMinutes}
+          onChange={(e) => setTargetDurationMinutes(Number(e.target.value))}
+          title="Target duration (minutes)"
+        />
+        <button type="submit">New Show</button>
+      </form>
+
+      {loading ? (
+        <p>Loading…</p>
+      ) : shows.length === 0 ? (
+        <p>No shows yet. Create your first one above.</p>
+      ) : (
+        <ul>
+          {shows.map((show) => (
+            <li key={show.id}>
+              <Link to={`/shows/${show.id}`}>
+                <span className="show-title">{show.title}</span>
+                <span className="show-meta">
+                  {new Date(show.scheduledAt).toLocaleString()} · {show.targetDurationMinutes}min ·{' '}
+                  {show.status}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
