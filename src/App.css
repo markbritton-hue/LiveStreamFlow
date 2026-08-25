@@ -1007,7 +1007,7 @@
 }
 
 .block-live-dimmed[class*='type-'] {
-  background: color-mix(in srgb, var(--type-color, var(--surface)) 5%, var(--surface));
+  background: color-mix(in srgb, var(--type-color, var(--surface)) 10%, var(--surface));
   color: var(--text);
 }
 
