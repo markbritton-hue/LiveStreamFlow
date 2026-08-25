@@ -149,8 +149,19 @@
 }
 
 .block-live-current {
-  border: 3px solid #d32f2f !important;
-  box-shadow: 0 0 0 4px color-mix(in srgb, #d32f2f 25%, transparent);
+  border: 6px solid #d32f2f !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #d32f2f 30%, transparent);
+}
+
+.block-live-current[class*='type-'] {
+  background: var(--type-color, var(--accent)) !important;
+  color: #fff;
+}
+
+.block-live-current input,
+.block-live-current select,
+.block-live-current textarea {
+  color: #fff !important;
 }
 
 .drag-handle-disabled {
