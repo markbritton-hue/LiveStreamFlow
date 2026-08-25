@@ -645,51 +645,6 @@
   color: var(--accent);
 }
 
-.show-info-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 220px;
-  padding: 12px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--border);
-  border-radius: 10px;
-}
-
-.show-info-card.status-live {
-  border-left-color: #ff4d4d;
-}
-
-.show-info-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 14px;
-  margin: 12px 0 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.show-info-row {
-  display: grid;
-  grid-template-columns: 70px 1fr;
-  gap: 12px;
-  font-size: 14px;
-}
-
-.show-info-row p {
-  margin: 0;
-  color: var(--text);
-  white-space: pre-wrap;
-}
-
-.show-info-label {
-  font-weight: 600;
-  color: var(--text-h);
-}
-
 .show-edit-panel {
   display: flex;
   flex-direction: column;

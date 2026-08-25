@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useShow } from './useShow'
 import { updateShow } from './useShows'
-import { useSegments } from './useSegments'
 import RundownBuilder from './RundownBuilder'
 import EmailListInput from './EmailListInput'
-import { durationToMinutes, type Show } from '../types'
+import type { Show } from '../types'
 
 function toDateTimeLocal(iso: string) {
   const d = new Date(iso)
@@ -17,7 +16,6 @@ function toDateTimeLocal(iso: string) {
 export default function ShowDetail() {
   const { showId } = useParams<{ showId: string }>()
   const { show, loading } = useShow(showId ?? '')
-  const { segments } = useSegments(showId ?? '')
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<Show | null>(null)
 
@@ -55,50 +53,12 @@ export default function ShowDetail() {
           <div className="show-detail-top">
             <div className="show-title-block">
               <h1>{show.title}</h1>
+              <span className={`show-status-badge status-${show.status}`}>{show.status}</span>
               <button type="button" onClick={() => setEditing(true)}>
                 Edit Show
               </button>
             </div>
-
-            <div className={`show-info-card status-${show.status}`}>
-              <span className={`show-status-badge status-${show.status}`}>{show.status}</span>
-              <div className="show-card-row">
-                <span className="show-card-icon">📅</span>
-                {new Date(show.scheduledAt).toLocaleString(undefined, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })}
-              </div>
-              {show.location && (
-                <div className="show-card-row">
-                  <span className="show-card-icon">📍</span>
-                  {show.location}
-                </div>
-              )}
-              <div className="show-card-row">
-                <span className="show-card-icon">⏱️</span>
-                {segments.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)} /{' '}
-                {show.targetDurationMinutes} min
-              </div>
-            </div>
           </div>
-
-          {(show.notes || show.guestEmails.length > 0) && (
-            <div className="show-info-panel">
-              {show.notes && (
-                <div className="show-info-row">
-                  <span className="show-info-label">Notes</span>
-                  <p>{show.notes}</p>
-                </div>
-              )}
-              {show.guestEmails.length > 0 && (
-                <div className="show-info-row">
-                  <span className="show-info-label">Guests</span>
-                  <p>{show.guestEmails.join(', ')}</p>
-                </div>
-              )}
-            </div>
-          )}
         </>
       ) : (
         draft && (
