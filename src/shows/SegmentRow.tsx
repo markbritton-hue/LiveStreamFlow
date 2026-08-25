@@ -87,6 +87,8 @@ export default function SegmentRow({
       <div
         className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}`}
       >
+        {segment.ready && <span className="ready-badge">✓ Ready</span>}
+
         <div className="block-header">
           <span className="drag-handle" {...attributes} {...listeners}>
             ⠿
@@ -130,6 +132,14 @@ export default function SegmentRow({
             onChange={(e) => updateSegment(showId, segment.id, { duration: e.target.value })}
             title="Duration (MM:SS)"
           />
+
+          <label className="ready-checkbox-label" title="Mark ready">
+            <input
+              type="checkbox"
+              checked={!!segment.ready}
+              onChange={(e) => updateSegment(showId, segment.id, { ready: e.target.checked })}
+            />
+          </label>
 
           <button
             type="button"

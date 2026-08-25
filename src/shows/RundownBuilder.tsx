@@ -92,6 +92,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
           notes: '',
           status: 'not-started',
           assetUrl: '',
+          ready: false,
         },
         sectionSegments.length,
       )

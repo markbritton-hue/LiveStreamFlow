@@ -42,6 +42,7 @@ export default function SectionBlock({
         notes: '',
         status: 'not-started',
         assetUrl: '',
+        ready: false,
       },
       ordered.length,
     )
