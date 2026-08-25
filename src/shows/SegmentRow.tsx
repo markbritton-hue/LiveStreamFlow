@@ -70,6 +70,7 @@ export default function SegmentRow({
     field: K,
     value: Segment[K],
   ) {
+    if (liveMode) return
     setLocal(value)
     updateSegment(showId, segment.id, { [field]: value } as Partial<Segment>)
   }
@@ -95,7 +96,7 @@ export default function SegmentRow({
   const videoEmbed = isVideoBlock && assetUrl ? getVideoEmbedUrl(assetUrl) : null
 
   async function moveToSection(targetSectionId: string) {
-    if (targetSectionId === segment.sectionId) return
+    if (liveMode || targetSectionId === segment.sectionId) return
     await updateSegment(showId, segment.id, { sectionId: targetSectionId, order: Date.now() })
   }
 
@@ -148,15 +149,18 @@ export default function SegmentRow({
             value={title}
             onChange={(e) => commitField(setTitle, 'title', e.target.value)}
             placeholder="Section name"
+            disabled={liveMode}
           />
-          <button
-            type="button"
-            className="delete-button"
-            onClick={() => deleteSegment(showId, segment.id)}
-            aria-label="Delete section"
-          >
-            ✕
-          </button>
+          {!liveMode && (
+            <button
+              type="button"
+              className="delete-button"
+              onClick={() => deleteSegment(showId, segment.id)}
+              aria-label="Delete section"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
     )
@@ -209,6 +213,7 @@ export default function SegmentRow({
             className="segment-title"
             value={title}
             onChange={(e) => commitField(setTitle, 'title', e.target.value)}
+            disabled={liveMode}
           />
 
           <select
@@ -216,6 +221,7 @@ export default function SegmentRow({
             onChange={(e) =>
               updateSegment(showId, segment.id, { type: e.target.value as SegmentType })
             }
+            disabled={liveMode}
           >
             {TYPES.map((t) => (
               <option key={t} value={t}>
@@ -233,6 +239,7 @@ export default function SegmentRow({
             value={duration}
             onChange={(e) => commitField(setDuration, 'duration', e.target.value)}
             title="Duration (MM:SS)"
+            disabled={liveMode}
           />
 
           <span className="block-header-thumb-slot">
@@ -254,39 +261,44 @@ export default function SegmentRow({
               type="checkbox"
               checked={!!segment.ready}
               onChange={(e) => updateSegment(showId, segment.id, { ready: e.target.checked })}
+              disabled={liveMode}
             />
           </label>
 
-          <button
-            type="button"
-            className="duplicate-button"
-            onClick={() => onDuplicate?.()}
-            aria-label="Duplicate block"
-            title="Duplicate block"
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {!liveMode && (
+            <button
+              type="button"
+              className="duplicate-button"
+              onClick={() => onDuplicate?.()}
+              aria-label="Duplicate block"
+              title="Duplicate block"
             >
-              <rect x="8" y="8" width="13" height="13" rx="2" />
-              <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
-            </svg>
-          </button>
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="8" y="8" width="13" height="13" rx="2" />
+                <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+              </svg>
+            </button>
+          )}
 
-          <button
-            type="button"
-            className="delete-button"
-            onClick={() => deleteSegment(showId, segment.id)}
-            aria-label="Delete segment"
-          >
-            ✕
-          </button>
+          {!liveMode && (
+            <button
+              type="button"
+              className="delete-button"
+              onClick={() => deleteSegment(showId, segment.id)}
+              aria-label="Delete segment"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
         {!expanded && !isMediaBlock && !isNotesOnlyBlock && (scriptCopy || detail) && (
@@ -325,13 +337,14 @@ export default function SegmentRow({
               onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
               onDragOver={handleAssetDragOver}
               onDrop={handleAssetDrop}
+              disabled={liveMode}
             />
             {assetUrl && (
               <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                 Open
               </a>
             )}
-            {assetsFolderUrl && (
+            {assetsFolderUrl && !liveMode && (
               <button
                 type="button"
                 className="asset-folder-link"
@@ -360,6 +373,7 @@ export default function SegmentRow({
                 value={notes}
                 onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
                 rows={2}
+                disabled={liveMode}
               />
             )}
           </div>
@@ -372,6 +386,7 @@ export default function SegmentRow({
             value={notes}
             onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
             rows={2}
+            disabled={liveMode}
           />
         )}
 
@@ -383,6 +398,7 @@ export default function SegmentRow({
               value={scriptCopy}
               onChange={(e) => commitField(setScriptCopy, 'scriptCopy', e.target.value)}
               rows={2}
+              disabled={liveMode}
             />
 
             <div className="block-body">
@@ -391,18 +407,21 @@ export default function SegmentRow({
                 placeholder="Detail (hometown, gown notes, selection, bio...)"
                 value={detail}
                 onChange={(e) => commitField(setDetail, 'detail', e.target.value)}
+                disabled={liveMode}
               />
               <input
                 className="segment-owner"
                 placeholder="Owner"
                 value={owner}
                 onChange={(e) => commitField(setOwner, 'owner', e.target.value)}
+                disabled={liveMode}
               />
               <input
                 className="segment-notes"
                 placeholder="Notes"
                 value={notes}
                 onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
+                disabled={liveMode}
               />
             </div>
 
@@ -417,13 +436,14 @@ export default function SegmentRow({
                 onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
                 onDragOver={handleAssetDragOver}
                 onDrop={handleAssetDrop}
+                disabled={liveMode}
               />
               {assetUrl && (
                 <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                   Open
                 </a>
               )}
-              {assetsFolderUrl && (
+              {assetsFolderUrl && !liveMode && (
                 <button
                   type="button"
                   className="asset-folder-link"
@@ -439,6 +459,7 @@ export default function SegmentRow({
                   value={segment.sectionId}
                   onChange={(e) => moveToSection(e.target.value)}
                   title="Move to section"
+                  disabled={liveMode}
                 >
                   {sections.map((s) => (
                     <option key={s.id} value={s.id}>

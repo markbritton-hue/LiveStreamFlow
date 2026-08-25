@@ -37,6 +37,7 @@ export default function SectionBlock({
   const { setNodeRef, isOver } = useDroppable({ id: `section-${section.id}` })
 
   function handleRename(value: string) {
+    if (liveMode) return
     setTitle(value)
     renameSection(showId, section.id, value)
   }
@@ -45,6 +46,7 @@ export default function SectionBlock({
   const sectionMinutes = ordered.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)
 
   async function handleDuplicate(segment: Segment) {
+    if (liveMode) return
     const { id, order, ...rest } = segment
     void id
     void order
@@ -70,18 +72,21 @@ export default function SectionBlock({
           className="section-title"
           value={title}
           onChange={(e) => handleRename(e.target.value)}
+          disabled={liveMode}
         />
         <span className="section-meta">
           {ordered.length} block{ordered.length === 1 ? '' : 's'} · {sectionMinutes} min
         </span>
-        <button
-          type="button"
-          className="delete-button"
-          onClick={() => deleteSection(showId, section.id)}
-          aria-label="Delete section"
-        >
-          ✕
-        </button>
+        {!liveMode && (
+          <button
+            type="button"
+            className="delete-button"
+            onClick={() => deleteSection(showId, section.id)}
+            aria-label="Delete section"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {!collapsed && (
