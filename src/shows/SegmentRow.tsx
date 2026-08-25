@@ -107,7 +107,7 @@ export default function SegmentRow({
     return (
       <div ref={setNodeRef} style={style} className="timeline-item">
         <div className="timeline-rail">
-          <span className="timeline-dot type-divider" title="Section Bar">
+          <span className="timeline-dot type-divider" title="Section">
             <SegmentTypeIcon type="divider" size={22} />
           </span>
           <span className="timeline-line" />
@@ -127,7 +127,7 @@ export default function SegmentRow({
             type="button"
             className="delete-button"
             onClick={() => deleteSegment(showId, segment.id)}
-            aria-label="Delete section bar"
+            aria-label="Delete section"
           >
             ✕
           </button>

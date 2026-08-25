@@ -734,6 +734,10 @@
   color: #fff;
 }
 
+.timeline-dot.type-divider {
+  min-height: 26px;
+}
+
 .timeline-line {
   width: 2px;
   height: 12px;
@@ -748,12 +752,12 @@
 .divider-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   min-width: 0;
-  padding: 8px 14px;
-  margin-bottom: 14px;
-  border-radius: 8px;
+  padding: 3px 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
   background: #5c6bc0;
   color: #fff;
 }

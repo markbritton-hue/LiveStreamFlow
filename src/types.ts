@@ -35,7 +35,7 @@ export const SEGMENT_TYPE_LABELS: Record<SegmentType, string> = {
   lighting: 'Lighting',
   transition: 'Transition',
   note: 'Note',
-  divider: 'Section Bar',
+  divider: 'Section',
   other: 'Other',
 }
 
