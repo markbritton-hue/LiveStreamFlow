@@ -117,7 +117,12 @@ export default function SegmentRow({
 
   if (segment.type === 'divider') {
     return (
-      <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
+      <div
+        id={`segment-${segment.id}`}
+        ref={setNodeRef}
+        style={style}
+        className={`timeline-item${liveMode ? ' timeline-item-live' : ''}`}
+      >
         <div className="timeline-rail">
           {liveMode ? (
             <button
@@ -167,7 +172,12 @@ export default function SegmentRow({
   }
 
   return (
-    <div id={`segment-${segment.id}`} ref={setNodeRef} style={style} className="timeline-item">
+    <div
+      id={`segment-${segment.id}`}
+      ref={setNodeRef}
+      style={style}
+      className={`timeline-item${liveMode ? ' timeline-item-live' : ''}`}
+    >
       <div className="timeline-rail">
         {liveMode ? (
           <button
