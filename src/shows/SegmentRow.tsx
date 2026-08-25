@@ -256,9 +256,9 @@ export default function SegmentRow({
           </button>
         )}
 
-        {!expanded && isMediaBlock && (assetUrl || notes) && (
+        {!expanded && isVideoBlock && notes && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
-            {isVideoBlock && notes ? notes : assetUrl}
+            {notes}
           </button>
         )}
 
