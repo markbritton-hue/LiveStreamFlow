@@ -72,7 +72,8 @@ export default function SegmentRow({
   const isVideoBlock = segment.type === 'video'
   const isGraphicBlock = segment.type === 'graphic'
   const isMusicBlock = segment.type === 'music'
-  const isNotesOnlyBlock = segment.type === 'camera-shot' || segment.type === 'transition'
+  const isNotesOnlyBlock =
+    segment.type === 'camera-shot' || segment.type === 'transition' || segment.type === 'other'
   const isMediaBlock = isVideoBlock || isGraphicBlock || isMusicBlock
   const mediaThumbnail = isVideoBlock
     ? getVideoThumbnail(assetUrl)
