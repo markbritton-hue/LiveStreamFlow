@@ -54,7 +54,6 @@ export default function ShowDetail() {
           <div className="show-detail-top">
             <div className="show-title-block">
               <h1>{show.title}</h1>
-              <span className={`show-status-badge status-${show.status}`}>{show.status}</span>
               <button type="button" onClick={() => setEditing(true)}>
                 Edit Show
               </button>
