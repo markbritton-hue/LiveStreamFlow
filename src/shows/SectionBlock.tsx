@@ -25,7 +25,13 @@ export default function SectionBlock({
   assetFilter?: AssetFilter
 }) {
   const [collapsed, setCollapsed] = useState(false)
+  const [title, setTitle] = useState(section.title)
   const { setNodeRef, isOver } = useDroppable({ id: `section-${section.id}` })
+
+  function handleRename(value: string) {
+    setTitle(value)
+    renameSection(showId, section.id, value)
+  }
 
   const ordered = [...segments].sort((a, b) => a.order - b.order)
   const sectionMinutes = ordered.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)
@@ -54,8 +60,8 @@ export default function SectionBlock({
         </button>
         <input
           className="section-title"
-          value={section.title}
-          onChange={(e) => renameSection(showId, section.id, e.target.value)}
+          value={title}
+          onChange={(e) => handleRename(e.target.value)}
         />
         <span className="section-meta">
           {ordered.length} block{ordered.length === 1 ? '' : 's'} · {sectionMinutes} min

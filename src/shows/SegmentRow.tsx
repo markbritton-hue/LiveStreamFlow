@@ -41,22 +41,43 @@ export default function SegmentRow({
   const [expanded, setExpanded] = useState(false)
   const [showImagePreview, setShowImagePreview] = useState(false)
 
+  // Local-first text state: typing updates these immediately and writes through to
+  // Firestore, but the displayed value never gets overwritten by the async
+  // onSnapshot echo — that round-trip lag was resetting the cursor to the end
+  // of the field on every keystroke.
+  const [title, setTitle] = useState(segment.title)
+  const [duration, setDuration] = useState(segment.duration ?? '')
+  const [scriptCopy, setScriptCopy] = useState(segment.scriptCopy)
+  const [detail, setDetail] = useState(segment.detail)
+  const [owner, setOwner] = useState(segment.owner)
+  const [notes, setNotes] = useState(segment.notes)
+  const [assetUrl, setAssetUrl] = useState(segment.assetUrl)
+
+  function commitField<K extends keyof Segment>(
+    setLocal: (value: Segment[K]) => void,
+    field: K,
+    value: Segment[K],
+  ) {
+    setLocal(value)
+    updateSegment(showId, segment.id, { [field]: value } as Partial<Segment>)
+  }
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   }
 
-  const assetType = detectAssetType(segment.assetUrl)
+  const assetType = detectAssetType(assetUrl)
   const isVideoBlock = segment.type === 'video'
   const isGraphicBlock = segment.type === 'graphic'
   const isMusicBlock = segment.type === 'music'
   const isNotesOnlyBlock = segment.type === 'camera-shot' || segment.type === 'transition'
   const isMediaBlock = isVideoBlock || isGraphicBlock || isMusicBlock
   const mediaThumbnail = isVideoBlock
-    ? getVideoThumbnail(segment.assetUrl)
-    : isGraphicBlock && segment.assetUrl
-      ? getImageDisplayUrl(segment.assetUrl)
+    ? getVideoThumbnail(assetUrl)
+    : isGraphicBlock && assetUrl
+      ? getImageDisplayUrl(assetUrl)
       : null
 
   async function moveToSection(targetSectionId: string) {
@@ -75,7 +96,7 @@ export default function SegmentRow({
       e.dataTransfer.getData('text/plain') ||
       e.dataTransfer.getData('text/html')?.match(/href="([^"]+)"/)?.[1]
     if (url) {
-      updateSegment(showId, segment.id, { assetUrl: url.trim() })
+      commitField(setAssetUrl, 'assetUrl', url.trim())
     }
   }
 
@@ -109,8 +130,8 @@ export default function SegmentRow({
 
           <input
             className="segment-title"
-            value={segment.title}
-            onChange={(e) => updateSegment(showId, segment.id, { title: e.target.value })}
+            value={title}
+            onChange={(e) => commitField(setTitle, 'title', e.target.value)}
           />
 
           <select
@@ -132,8 +153,8 @@ export default function SegmentRow({
             pattern="[0-9]{1,2}:[0-9]{2}"
             placeholder="MM:SS"
             className="segment-duration"
-            value={segment.duration ?? ''}
-            onChange={(e) => updateSegment(showId, segment.id, { duration: e.target.value })}
+            value={duration}
+            onChange={(e) => commitField(setDuration, 'duration', e.target.value)}
             title="Duration (MM:SS)"
           />
 
@@ -191,21 +212,21 @@ export default function SegmentRow({
           </button>
         </div>
 
-        {!expanded && !isMediaBlock && !isNotesOnlyBlock && (segment.scriptCopy || segment.detail) && (
+        {!expanded && !isMediaBlock && !isNotesOnlyBlock && (scriptCopy || detail) && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
-            {segment.scriptCopy || segment.detail}
+            {scriptCopy || detail}
           </button>
         )}
 
-        {!expanded && isMediaBlock && (segment.assetUrl || segment.notes) && (
+        {!expanded && isMediaBlock && (assetUrl || notes) && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
-            {isVideoBlock && segment.notes ? segment.notes : segment.assetUrl}
+            {isVideoBlock && notes ? notes : assetUrl}
           </button>
         )}
 
-        {!expanded && isNotesOnlyBlock && segment.notes && (
+        {!expanded && isNotesOnlyBlock && notes && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
-            {segment.notes}
+            {notes}
           </button>
         )}
 
@@ -223,18 +244,13 @@ export default function SegmentRow({
                     ? 'Music/audio URL — or drag a file here'
                     : 'Graphic/image URL — or drag a file here'
               }
-              value={segment.assetUrl}
-              onChange={(e) => updateSegment(showId, segment.id, { assetUrl: e.target.value })}
+              value={assetUrl}
+              onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
               onDragOver={handleAssetDragOver}
               onDrop={handleAssetDrop}
             />
-            {segment.assetUrl && (
-              <a
-                className="asset-open-link"
-                href={segment.assetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            {assetUrl && (
+              <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                 Open
               </a>
             )}
@@ -248,8 +264,8 @@ export default function SegmentRow({
               <textarea
                 className="segment-script"
                 placeholder="Notes..."
-                value={segment.notes}
-                onChange={(e) => updateSegment(showId, segment.id, { notes: e.target.value })}
+                value={notes}
+                onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
                 rows={2}
               />
             )}
@@ -260,8 +276,8 @@ export default function SegmentRow({
           <textarea
             className="segment-script"
             placeholder="Notes..."
-            value={segment.notes}
-            onChange={(e) => updateSegment(showId, segment.id, { notes: e.target.value })}
+            value={notes}
+            onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
             rows={2}
           />
         )}
@@ -271,8 +287,8 @@ export default function SegmentRow({
             <textarea
               className="segment-script"
               placeholder="Script copy — host lines, [stage directions]..."
-              value={segment.scriptCopy}
-              onChange={(e) => updateSegment(showId, segment.id, { scriptCopy: e.target.value })}
+              value={scriptCopy}
+              onChange={(e) => commitField(setScriptCopy, 'scriptCopy', e.target.value)}
               rows={2}
             />
 
@@ -280,20 +296,20 @@ export default function SegmentRow({
               <input
                 className="segment-detail"
                 placeholder="Detail (hometown, gown notes, selection, bio...)"
-                value={segment.detail}
-                onChange={(e) => updateSegment(showId, segment.id, { detail: e.target.value })}
+                value={detail}
+                onChange={(e) => commitField(setDetail, 'detail', e.target.value)}
               />
               <input
                 className="segment-owner"
                 placeholder="Owner"
-                value={segment.owner}
-                onChange={(e) => updateSegment(showId, segment.id, { owner: e.target.value })}
+                value={owner}
+                onChange={(e) => commitField(setOwner, 'owner', e.target.value)}
               />
               <input
                 className="segment-notes"
                 placeholder="Notes"
-                value={segment.notes}
-                onChange={(e) => updateSegment(showId, segment.id, { notes: e.target.value })}
+                value={notes}
+                onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
               />
             </div>
 
@@ -304,18 +320,13 @@ export default function SegmentRow({
               <input
                 className="segment-asset-url"
                 placeholder="Asset link — or drag a file here"
-                value={segment.assetUrl}
-                onChange={(e) => updateSegment(showId, segment.id, { assetUrl: e.target.value })}
+                value={assetUrl}
+                onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
                 onDragOver={handleAssetDragOver}
                 onDrop={handleAssetDrop}
               />
-              {segment.assetUrl && (
-                <a
-                  className="asset-open-link"
-                  href={segment.assetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              {assetUrl && (
+                <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                   Open
                 </a>
               )}
@@ -335,12 +346,12 @@ export default function SegmentRow({
               )}
             </div>
 
-            {segment.assetUrl &&
+            {assetUrl &&
               (assetType === 'image' ||
-                segment.assetUrl.includes('drive.google.com') ||
-                segment.assetUrl.includes('dropbox.com')) && (
+                assetUrl.includes('drive.google.com') ||
+                assetUrl.includes('dropbox.com')) && (
                 <div className="block-asset-preview">
-                  <img src={getImageDisplayUrl(segment.assetUrl)} alt={segment.title} loading="lazy" />
+                  <img src={getImageDisplayUrl(assetUrl)} alt={segment.title} loading="lazy" />
                 </div>
               )}
           </>
