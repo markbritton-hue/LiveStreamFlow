@@ -982,6 +982,7 @@
 }
 
 .block-asset-preview {
+  position: relative;
   margin-top: 8px;
 }
 
@@ -991,6 +992,30 @@
   border-radius: 6px;
   border: 1px solid var(--border);
   display: block;
+}
+
+.block-asset-preview-button {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.block-asset-preview-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: auto;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 18px;
+  pointer-events: none;
 }
 
 .drag-handle {

@@ -258,9 +258,15 @@ export default function SegmentRow({
               </a>
             )}
             {mediaThumbnail && (
-              <div className="block-asset-preview">
+              <button
+                type="button"
+                className="block-asset-preview block-asset-preview-button"
+                onClick={() => setShowImagePreview(true)}
+                aria-label={isVideoBlock ? 'Play video' : 'View full image'}
+              >
                 <img src={mediaThumbnail} alt={segment.title} loading="lazy" />
-              </div>
+                {isVideoBlock && <span className="block-asset-preview-play">▶</span>}
+              </button>
             )}
 
             {isVideoBlock && (
