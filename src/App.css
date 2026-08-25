@@ -1006,6 +1006,10 @@
   background: color-mix(in srgb, var(--type-color, var(--surface)) 18%, var(--surface));
 }
 
+.block-live-dimmed[class*='type-'] {
+  background: color-mix(in srgb, var(--type-color, var(--surface)) 8%, var(--surface));
+}
+
 .ready-badge {
   position: absolute;
   top: -8px;
