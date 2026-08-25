@@ -189,10 +189,18 @@
 
 /* Shows list */
 
+.shows-list {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
 .shows-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
 }
 
 .shows-list-header button {
@@ -300,7 +308,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 16px;
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-left: 4px solid var(--border);
   border-radius: 10px;
