@@ -19,8 +19,8 @@ function AppShell() {
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header-left">
-          <BackButton />
           <img src={logo} alt="LiveStreamFlow" className="app-logo" />
+          <BackButton />
         </div>
         <span className="app-user">
           {user.email}

@@ -21,8 +21,9 @@
 
 .app-header-left {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .back-button {
