@@ -753,6 +753,7 @@
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 14px;
+  color: var(--text-h);
 }
 
 .block.status-live {
