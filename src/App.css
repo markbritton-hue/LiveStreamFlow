@@ -767,9 +767,25 @@
 
 .block-header {
   display: grid;
-  grid-template-columns: 20px 24px 2fr 1fr 110px 20px 24px;
+  grid-template-columns: 20px 24px 2fr 1fr 110px 28px 20px 24px;
   gap: 6px;
   align-items: center;
+}
+
+.block-header-thumb-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.block-header-thumb {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .ready-checkbox-label {

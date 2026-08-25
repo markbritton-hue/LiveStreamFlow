@@ -133,6 +133,12 @@ export default function SegmentRow({
             title="Duration (MM:SS)"
           />
 
+          <span className="block-header-thumb-slot">
+            {isGraphicBlock && mediaThumbnail && (
+              <img src={mediaThumbnail} alt="" className="block-header-thumb" />
+            )}
+          </span>
+
           <label className="ready-checkbox-label" title="Mark ready">
             <input
               type="checkbox"
