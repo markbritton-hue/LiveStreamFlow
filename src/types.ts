@@ -6,6 +6,10 @@ export interface Show {
   status: 'planned' | 'live' | 'completed'
   createdBy: string
   createdAt: string // ISO datetime
+  location: string
+  notes: string
+  teamMembers: string[]
+  guestEmails: string[]
 }
 
 export type SegmentType =

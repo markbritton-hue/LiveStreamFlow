@@ -248,6 +248,146 @@
   font-size: 14px;
 }
 
+.show-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.show-detail-header button {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.show-detail-header button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.show-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  margin: 12px 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.show-info-row {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.show-info-row p {
+  margin: 0;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.show-info-label {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.show-edit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  margin: 12px 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.show-edit-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.show-edit-panel input,
+.show-edit-panel textarea {
+  font-weight: 400;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  resize: vertical;
+}
+
+.show-edit-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.show-edit-actions button[type='button']:first-child {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.email-list-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.email-list-input input {
+  flex: 1;
+  min-width: 160px;
+  border: none;
+  background: none;
+  padding: 4px;
+  font-weight: 400;
+}
+
+.email-list-input input:focus {
+  outline: none;
+}
+
+.email-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--accent-bg, color-mix(in srgb, var(--accent) 15%, transparent));
+  color: var(--text-h);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.email-chip button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 10px;
+  padding: 0;
+}
+
 .rundown-summary {
   padding: 10px 14px;
   background: var(--surface);

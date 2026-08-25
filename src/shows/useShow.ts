@@ -9,7 +9,18 @@ export function useShow(showId: string) {
 
   useEffect(() => {
     return onSnapshot(doc(db, 'shows', showId), (snap) => {
-      setShow(snap.exists() ? ({ id: snap.id, ...snap.data() } as Show) : null)
+      setShow(
+        snap.exists()
+          ? ({
+              location: '',
+              notes: '',
+              teamMembers: [],
+              guestEmails: [],
+              ...(snap.data() as Partial<Show>),
+              id: snap.id,
+            } as Show)
+          : null,
+      )
       setLoading(false)
     })
   }, [showId])
