@@ -73,21 +73,25 @@ export function detectAssetType(url: string): AssetType {
 }
 
 const YOUTUBE_ID = /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/i
+const GOOGLE_DRIVE_ID = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/i
 
-export function getVideoThumbnail(url: string): string | null {
-  const match = url.match(YOUTUBE_ID)
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null
+function getDriveThumbnail(url: string): string | null {
+  const match = url.match(GOOGLE_DRIVE_ID)
+  return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000` : null
 }
 
-const GOOGLE_DRIVE_ID = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/i
+export function getVideoThumbnail(url: string): string | null {
+  if (!url) return null
+  const youtubeMatch = url.match(YOUTUBE_ID)
+  if (youtubeMatch) return `https://img.youtube.com/vi/${youtubeMatch[1]}/hqdefault.jpg`
+  return getDriveThumbnail(url)
+}
 
 export function getImageDisplayUrl(url: string): string {
   if (!url) return url
 
-  const driveMatch = url.match(GOOGLE_DRIVE_ID)
-  if (driveMatch) {
-    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`
-  }
+  const driveThumb = getDriveThumbnail(url)
+  if (driveThumb) return driveThumb
 
   if (url.includes('dropbox.com')) {
     const stripped = url.replace(/[?&]dl=[01]/, '').replace(/\?$/, '')
