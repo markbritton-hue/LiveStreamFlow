@@ -138,14 +138,15 @@ export default function SegmentRow({
           />
 
           <span className="block-header-thumb-slot">
-            {isGraphicBlock && mediaThumbnail && (
+            {(isGraphicBlock || isVideoBlock) && mediaThumbnail && (
               <button
                 type="button"
                 className="block-header-thumb-button"
                 onClick={() => setShowImagePreview(true)}
-                aria-label="View full image"
+                aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
               >
                 <img src={mediaThumbnail} alt="" className="block-header-thumb" />
+                {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
               </button>
             )}
           </span>
