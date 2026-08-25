@@ -11,6 +11,7 @@ export interface Show {
   teamMembers: string[]
   guestEmails: string[]
   assetsFolderUrl: string
+  liveCurrentSegmentId: string
 }
 
 export type SegmentType =

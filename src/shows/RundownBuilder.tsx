@@ -14,6 +14,7 @@ import { SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
 import type { ReadyFilter, AssetFilter } from './rundownFilters'
 import { addSegment, reorderSegments, useSegments } from './useSegments'
 import { createSection, useSections } from './useSections'
+import { updateShow } from './useShows'
 import SectionBlock from './SectionBlock'
 import BlockPalette from './BlockPalette'
 import SegmentTypeIcon from './SegmentTypeIcon'
@@ -34,7 +35,9 @@ export default function RundownBuilder({ show }: { show: Show }) {
   const [readyFilter, setReadyFilter] = useState<ReadyFilter>('all')
   const [assetFilter, setAssetFilter] = useState<AssetFilter>('all')
   const [liveMode, setLiveMode] = useState(false)
-  const [currentSegmentId, setCurrentSegmentId] = useState<string | null>(null)
+  const [currentSegmentId, setCurrentSegmentId] = useState<string | null>(
+    show.liveCurrentSegmentId || null,
+  )
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   const flattenedSegments = useMemo(() => {
@@ -48,10 +51,18 @@ export default function RundownBuilder({ show }: { show: Show }) {
 
   const currentIndex = flattenedSegments.findIndex((s) => s.id === currentSegmentId)
 
+  function persistCurrent(segmentId: string | null) {
+    setCurrentSegmentId(segmentId)
+    updateShow(show.id, { liveCurrentSegmentId: segmentId ?? '' })
+  }
+
   function handleStartLive() {
     setLiveMode(true)
-    setCurrentSegmentId(flattenedSegments[0]?.id ?? null)
-    requestAnimationFrame(() => scrollToSegment(flattenedSegments[0]?.id))
+    const stillExists =
+      currentSegmentId && flattenedSegments.some((s) => s.id === currentSegmentId)
+    const target = stillExists ? currentSegmentId : (flattenedSegments[0]?.id ?? null)
+    if (target !== currentSegmentId) persistCurrent(target)
+    requestAnimationFrame(() => scrollToSegment(target ?? undefined))
   }
 
   function handleExitLive() {
@@ -61,14 +72,14 @@ export default function RundownBuilder({ show }: { show: Show }) {
   function handlePrev() {
     if (currentIndex <= 0) return
     const target = flattenedSegments[currentIndex - 1]
-    setCurrentSegmentId(target.id)
+    persistCurrent(target.id)
     scrollToSegment(target.id)
   }
 
   function handleNext() {
     if (currentIndex === -1 || currentIndex >= flattenedSegments.length - 1) return
     const target = flattenedSegments[currentIndex + 1]
-    setCurrentSegmentId(target.id)
+    persistCurrent(target.id)
     scrollToSegment(target.id)
   }
 
@@ -80,7 +91,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
   }
 
   function handleSetCurrent(segmentId: string) {
-    setCurrentSegmentId(segmentId)
+    persistCurrent(segmentId)
     scrollToSegment(segmentId)
   }
 

@@ -28,6 +28,7 @@ export function useShows() {
               teamMembers: [],
               guestEmails: [],
               assetsFolderUrl: '',
+              liveCurrentSegmentId: '',
               ...(d.data() as Partial<Show>),
               id: d.id,
             }) as Show,
