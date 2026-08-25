@@ -12,6 +12,7 @@ import {
 } from '../types'
 import { deleteSegment, updateSegment } from './useSegments'
 import SegmentTypeIcon from './SegmentTypeIcon'
+import Modal from '../components/Modal'
 
 const TYPES = Object.keys(SEGMENT_TYPE_LABELS) as SegmentType[]
 
@@ -36,6 +37,7 @@ export default function SegmentRow({
     id: segment.id,
   })
   const [expanded, setExpanded] = useState(false)
+  const [showImagePreview, setShowImagePreview] = useState(false)
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -135,7 +137,14 @@ export default function SegmentRow({
 
           <span className="block-header-thumb-slot">
             {isGraphicBlock && mediaThumbnail && (
-              <img src={mediaThumbnail} alt="" className="block-header-thumb" />
+              <button
+                type="button"
+                className="block-header-thumb-button"
+                onClick={() => setShowImagePreview(true)}
+                aria-label="View full image"
+              >
+                <img src={mediaThumbnail} alt="" className="block-header-thumb" />
+              </button>
             )}
           </span>
 
@@ -312,6 +321,12 @@ export default function SegmentRow({
           </>
         )}
       </div>
+
+      {showImagePreview && mediaThumbnail && (
+        <Modal title={segment.title || 'Image'} onClose={() => setShowImagePreview(false)} size="large">
+          <img src={mediaThumbnail} alt={segment.title} className="image-preview-modal-img" />
+        </Modal>
+      )}
     </div>
   )
 }
