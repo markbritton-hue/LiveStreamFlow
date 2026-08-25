@@ -5,6 +5,7 @@ import { auth } from './firebase'
 import SignIn from './auth/SignIn'
 import ShowsList from './shows/ShowsList'
 import ShowDetail from './shows/ShowDetail'
+import logo from './assets/logo.png'
 import './App.css'
 
 function AppShell() {
@@ -16,7 +17,7 @@ function AppShell() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="app-name">LiveStreamFlow</span>
+        <img src={logo} alt="LiveStreamFlow" className="app-logo" />
         <span className="app-user">
           {user.email}
           <button type="button" className="link-button" onClick={() => signOut(auth)}>

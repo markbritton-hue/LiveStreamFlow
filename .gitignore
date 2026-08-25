@@ -23,3 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Source design files (processed copies live in src/assets, public)
+livestreamlogo2.png
