@@ -10,6 +10,7 @@ export interface Show {
   notes: string
   teamMembers: string[]
   guestEmails: string[]
+  assetsFolderUrl: string
 }
 
 export type SegmentType =

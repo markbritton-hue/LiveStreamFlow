@@ -27,6 +27,7 @@ export function useShows() {
               notes: '',
               teamMembers: [],
               guestEmails: [],
+              assetsFolderUrl: '',
               ...(d.data() as Partial<Show>),
               id: d.id,
             }) as Show,
@@ -53,6 +54,7 @@ export async function createShow(input: {
     notes: '',
     teamMembers: [],
     guestEmails: [],
+    assetsFolderUrl: '',
   })
 }
 

@@ -38,6 +38,7 @@ export default function ShowDetail() {
       notes: draft.notes,
       teamMembers: draft.teamMembers,
       guestEmails: draft.guestEmails,
+      assetsFolderUrl: draft.assetsFolderUrl,
     })
     setEditing(false)
   }
@@ -90,8 +91,21 @@ export default function ShowDetail() {
             </div>
           </div>
 
-          {(show.notes || show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
+          {(show.notes ||
+            show.teamMembers.length > 0 ||
+            show.guestEmails.length > 0 ||
+            show.assetsFolderUrl) && (
             <div className="show-info-panel">
+              {show.assetsFolderUrl && (
+                <div className="show-info-row">
+                  <span className="show-info-label">Assets</span>
+                  <p>
+                    <a href={show.assetsFolderUrl} target="_blank" rel="noopener noreferrer">
+                      {show.assetsFolderUrl}
+                    </a>
+                  </p>
+                </div>
+              )}
               {show.notes && (
                 <div className="show-info-row">
                   <span className="show-info-label">Notes</span>
@@ -161,6 +175,16 @@ export default function ShowDetail() {
                 placeholder="General notes about this show..."
                 value={draft.notes}
                 onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
+              />
+            </label>
+
+            <label>
+              Assets folder (Google Drive link)
+              <input
+                type="url"
+                placeholder="https://drive.google.com/drive/folders/..."
+                value={draft.assetsFolderUrl}
+                onChange={(e) => setDraft({ ...draft, assetsFolderUrl: e.target.value })}
               />
             </label>
 

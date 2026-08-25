@@ -16,6 +16,7 @@ export function useShow(showId: string) {
               notes: '',
               teamMembers: [],
               guestEmails: [],
+              assetsFolderUrl: '',
               ...(snap.data() as Partial<Show>),
               id: snap.id,
             } as Show)
