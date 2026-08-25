@@ -18,11 +18,13 @@ export default function RundownFilterBar({
   onReadyFilterChange,
   assetFilter,
   onAssetFilterChange,
+  onStartLive,
 }: {
   readyFilter: ReadyFilter
   onReadyFilterChange: (value: ReadyFilter) => void
   assetFilter: AssetFilter
   onAssetFilterChange: (value: AssetFilter) => void
+  onStartLive?: () => void
 }) {
   return (
     <div className="rundown-filter-bar">
@@ -53,6 +55,12 @@ export default function RundownFilterBar({
           </button>
         ))}
       </div>
+
+      {onStartLive && (
+        <button type="button" className="live-mode-start-button filter-bar-live-button" onClick={onStartLive}>
+          ▶ Start Live Mode
+        </button>
+      )}
     </div>
   )
 }

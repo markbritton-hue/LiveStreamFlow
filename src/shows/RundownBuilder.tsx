@@ -207,27 +207,28 @@ export default function RundownBuilder({ show }: { show: Show }) {
         {!liveMode && <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />}
 
         <div className="rundown-builder">
-          <LiveModeBar
-            liveMode={liveMode}
-            onStart={handleStartLive}
-            onExit={handleExitLive}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            onJumpToCurrent={() => scrollToSegment(currentSegmentId ?? undefined)}
-            canGoPrev={currentIndex > 0}
-            canGoNext={currentIndex !== -1 && currentIndex < flattenedSegments.length - 1}
-            positionLabel={
-              currentIndex !== -1
-                ? `Block ${currentIndex + 1} of ${flattenedSegments.length}: ${flattenedSegments[currentIndex].title}`
-                : null
-            }
-          />
+          {liveMode && (
+            <LiveModeBar
+              onExit={handleExitLive}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              onJumpToCurrent={() => scrollToSegment(currentSegmentId ?? undefined)}
+              canGoPrev={currentIndex > 0}
+              canGoNext={currentIndex !== -1 && currentIndex < flattenedSegments.length - 1}
+              positionLabel={
+                currentIndex !== -1
+                  ? `Block ${currentIndex + 1} of ${flattenedSegments.length}: ${flattenedSegments[currentIndex].title}`
+                  : null
+              }
+            />
+          )}
 
           <RundownFilterBar
             readyFilter={readyFilter}
             onReadyFilterChange={setReadyFilter}
             assetFilter={assetFilter}
             onAssetFilterChange={setAssetFilter}
+            onStartLive={liveMode ? undefined : handleStartLive}
           />
 
           {loading ? (

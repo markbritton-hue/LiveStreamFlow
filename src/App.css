@@ -173,6 +173,7 @@
 
 .rundown-filter-bar {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
   padding: 10px 14px;
@@ -180,6 +181,10 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
+}
+
+.filter-bar-live-button {
+  margin-left: auto;
 }
 
 .filter-group {
@@ -624,6 +629,28 @@
   display: flex;
   align-items: center;
   gap: 14px;
+}
+
+.show-date-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.show-countdown {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.show-countdown-past {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .show-title-block h1 {

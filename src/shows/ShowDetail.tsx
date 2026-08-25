@@ -4,6 +4,7 @@ import { useShow } from './useShow'
 import { updateShow } from './useShows'
 import RundownBuilder from './RundownBuilder'
 import EmailListInput from './EmailListInput'
+import ShowCountdownCard from './ShowCountdownCard'
 import type { Show } from '../types'
 
 function toDateTimeLocal(iso: string) {
@@ -58,6 +59,8 @@ export default function ShowDetail() {
                 Edit Show
               </button>
             </div>
+
+            <ShowCountdownCard scheduledAt={show.scheduledAt} />
           </div>
         </>
       ) : (
