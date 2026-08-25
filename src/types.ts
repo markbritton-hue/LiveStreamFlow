@@ -22,6 +22,7 @@ export type SegmentType =
   | 'lighting'
   | 'transition'
   | 'note'
+  | 'divider'
   | 'other'
 export type SegmentStatus = 'not-started' | 'live' | 'done'
 
@@ -34,6 +35,7 @@ export const SEGMENT_TYPE_LABELS: Record<SegmentType, string> = {
   lighting: 'Lighting',
   transition: 'Transition',
   note: 'Note',
+  divider: 'Section Bar',
   other: 'Other',
 }
 

@@ -103,6 +103,39 @@ export default function SegmentRow({
     }
   }
 
+  if (segment.type === 'divider') {
+    return (
+      <div ref={setNodeRef} style={style} className="timeline-item">
+        <div className="timeline-rail">
+          <span className="timeline-dot type-divider" title="Section Bar">
+            <SegmentTypeIcon type="divider" size={22} />
+          </span>
+          <span className="timeline-line" />
+        </div>
+
+        <div className="divider-bar">
+          <span className="drag-handle" {...attributes} {...listeners}>
+            ⠿
+          </span>
+          <input
+            className="divider-bar-title"
+            value={title}
+            onChange={(e) => commitField(setTitle, 'title', e.target.value)}
+            placeholder="Section name"
+          />
+          <button
+            type="button"
+            className="delete-button"
+            onClick={() => deleteSegment(showId, segment.id)}
+            aria-label="Delete section bar"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div ref={setNodeRef} style={style} className="timeline-item">
       <div className="timeline-rail">

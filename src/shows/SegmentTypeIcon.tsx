@@ -59,6 +59,13 @@ const PATHS: Record<SegmentType, ReactNode> = {
       <circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none" />
     </>
   ),
+  divider: (
+    <>
+      <line x1="3" y1="7" x2="21" y2="7" />
+      <line x1="3" y1="12" x2="15" y2="12" />
+      <line x1="3" y1="17" x2="21" y2="17" />
+    </>
+  ),
   other: (
     <>
       <rect x="3" y="3" width="7" height="7" rx="1.5" />

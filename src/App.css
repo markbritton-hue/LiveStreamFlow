@@ -745,6 +745,46 @@
   display: none;
 }
 
+.divider-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  background: #5c6bc0;
+  color: #fff;
+}
+
+.divider-bar-title {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 4px 0;
+}
+
+.divider-bar-title::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.divider-bar .delete-button {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.divider-bar .delete-button:hover {
+  color: #fff;
+}
+
+.divider-bar .drag-handle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .block {
   width: 100%;
   min-width: 0;
@@ -794,6 +834,9 @@
 }
 .type-note {
   --type-color: #ff1a1a;
+}
+.type-divider {
+  --type-color: #5c6bc0;
 }
 .type-other {
   --type-color: #6d7280;
