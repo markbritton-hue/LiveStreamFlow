@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, type DragEvent } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
   detectAssetType,
+  getImageDisplayUrl,
   getVideoThumbnail,
   SEGMENT_TYPE_ICONS,
   SEGMENT_TYPE_LABELS,
@@ -51,12 +52,27 @@ export default function SegmentRow({
   const mediaThumbnail = isVideoBlock
     ? getVideoThumbnail(segment.assetUrl)
     : isGraphicBlock && segment.assetUrl
-      ? segment.assetUrl
+      ? getImageDisplayUrl(segment.assetUrl)
       : null
 
   async function moveToSection(targetSectionId: string) {
     if (targetSectionId === segment.sectionId) return
     await updateSegment(showId, segment.id, { sectionId: targetSectionId, order: Date.now() })
+  }
+
+  function handleAssetDragOver(e: DragEvent) {
+    e.preventDefault()
+  }
+
+  function handleAssetDrop(e: DragEvent) {
+    e.preventDefault()
+    const url =
+      e.dataTransfer.getData('text/uri-list') ||
+      e.dataTransfer.getData('text/plain') ||
+      e.dataTransfer.getData('text/html')?.match(/href="([^"]+)"/)?.[1]
+    if (url) {
+      updateSegment(showId, segment.id, { assetUrl: url.trim() })
+    }
   }
 
   return (
@@ -151,10 +167,16 @@ export default function SegmentRow({
             <input
               className="segment-asset-url"
               placeholder={
-                isVideoBlock ? 'Video URL' : isMusicBlock ? 'Music/audio URL' : 'Graphic/image URL'
+                isVideoBlock
+                  ? 'Video URL — or drag a file here'
+                  : isMusicBlock
+                    ? 'Music/audio URL — or drag a file here'
+                    : 'Graphic/image URL — or drag a file here'
               }
               value={segment.assetUrl}
               onChange={(e) => updateSegment(showId, segment.id, { assetUrl: e.target.value })}
+              onDragOver={handleAssetDragOver}
+              onDrop={handleAssetDrop}
             />
             {segment.assetUrl && (
               <a
@@ -221,9 +243,11 @@ export default function SegmentRow({
               </span>
               <input
                 className="segment-asset-url"
-                placeholder="Asset link (image, video, doc, or any URL)"
+                placeholder="Asset link — or drag a file here"
                 value={segment.assetUrl}
                 onChange={(e) => updateSegment(showId, segment.id, { assetUrl: e.target.value })}
+                onDragOver={handleAssetDragOver}
+                onDrop={handleAssetDrop}
               />
               {segment.assetUrl && (
                 <a
@@ -251,11 +275,14 @@ export default function SegmentRow({
               )}
             </div>
 
-            {assetType === 'image' && segment.assetUrl && (
-              <div className="block-asset-preview">
-                <img src={segment.assetUrl} alt={segment.title} loading="lazy" />
-              </div>
-            )}
+            {segment.assetUrl &&
+              (assetType === 'image' ||
+                segment.assetUrl.includes('drive.google.com') ||
+                segment.assetUrl.includes('dropbox.com')) && (
+                <div className="block-asset-preview">
+                  <img src={getImageDisplayUrl(segment.assetUrl)} alt={segment.title} loading="lazy" />
+                </div>
+              )}
           </>
         )}
       </div>

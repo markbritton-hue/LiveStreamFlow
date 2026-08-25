@@ -11,11 +11,13 @@ export default function SectionBlock({
   section,
   sections,
   segments,
+  dropBeforeId,
 }: {
   showId: string
   section: Section
   sections: Section[]
   segments: Segment[]
+  dropBeforeId?: string | null
 }) {
   const [title, setTitle] = useState('')
   const [collapsed, setCollapsed] = useState(false)
@@ -83,13 +85,14 @@ export default function SectionBlock({
                 <p className="timeline-empty">Drag a block here, or use the form below.</p>
               )}
               {ordered.map((segment) => (
-                <SegmentRow
-                  key={segment.id}
-                  showId={showId}
-                  segment={segment}
-                  sections={sections}
-                />
+                <div key={segment.id}>
+                  {dropBeforeId === segment.id && <div className="drop-indicator" />}
+                  <SegmentRow showId={showId} segment={segment} sections={sections} />
+                </div>
               ))}
+              {dropBeforeId === `section-${section.id}` && ordered.length > 0 && (
+                <div className="drop-indicator" />
+              )}
             </div>
           </SortableContext>
 

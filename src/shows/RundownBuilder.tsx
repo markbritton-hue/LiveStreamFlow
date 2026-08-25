@@ -7,6 +7,7 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
 import {
@@ -31,6 +32,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
   const { segments, loading: segmentsLoading } = useSegments(show.id)
   const [creatingDefault, setCreatingDefault] = useState(false)
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
+  const [overId, setOverId] = useState<string | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   const totalMinutes = segments.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)
@@ -49,8 +51,18 @@ export default function RundownBuilder({ show }: { show: Show }) {
     setActiveDrag((event.active.data.current as DragData) ?? null)
   }
 
+  function handleDragOver(event: DragOverEvent) {
+    setOverId(event.over ? String(event.over.id) : null)
+  }
+
+  function handleDragCancel() {
+    setActiveDrag(null)
+    setOverId(null)
+  }
+
   async function handleDragEnd(event: DragEndEvent) {
     setActiveDrag(null)
+    setOverId(null)
     const { active, over } = event
     if (!over) return
 
@@ -126,7 +138,9 @@ export default function RundownBuilder({ show }: { show: Show }) {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
       <div className="rundown-layout">
         <BlockPalette />
@@ -154,6 +168,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 section={section}
                 sections={sections}
                 segments={segments.filter((s) => s.sectionId === section.id)}
+                dropBeforeId={activeDrag?.source === 'palette' ? overId : null}
               />
             ))
           )}

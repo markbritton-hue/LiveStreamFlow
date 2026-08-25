@@ -33,15 +33,15 @@ export const SEGMENT_TYPE_LABELS: Record<SegmentType, string> = {
 }
 
 export const SEGMENT_TYPE_ICONS: Record<SegmentType, string> = {
-  'host-script': '🎙️',
-  video: '🎬',
-  graphic: '🖼️',
-  music: '🎵',
-  'camera-shot': '📷',
-  lighting: '💡',
-  transition: '🔁',
-  note: '📝',
-  other: '📦',
+  'host-script': '🗣️',
+  video: '📹',
+  graphic: '🎨',
+  music: '🎧',
+  'camera-shot': '🎥',
+  lighting: '🔦',
+  transition: '🔀',
+  note: '⚠️',
+  other: '⬛',
 }
 
 export type AssetType = 'image' | 'video' | 'doc' | 'link' | 'none'
@@ -84,6 +84,24 @@ const YOUTUBE_ID = /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)
 export function getVideoThumbnail(url: string): string | null {
   const match = url.match(YOUTUBE_ID)
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null
+}
+
+const GOOGLE_DRIVE_ID = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/i
+
+export function getImageDisplayUrl(url: string): string {
+  if (!url) return url
+
+  const driveMatch = url.match(GOOGLE_DRIVE_ID)
+  if (driveMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`
+  }
+
+  if (url.includes('dropbox.com')) {
+    const stripped = url.replace(/[?&]dl=[01]/, '').replace(/\?$/, '')
+    return stripped + (stripped.includes('?') ? '&raw=1' : '?raw=1')
+  }
+
+  return url
 }
 
 export function durationToMinutes(duration: string | undefined): number {

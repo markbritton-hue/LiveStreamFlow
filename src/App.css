@@ -108,6 +108,14 @@
   margin-bottom: 8px;
 }
 
+.drop-indicator {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  margin: 0 0 8px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
 .app-user {
   display: flex;
   align-items: center;
@@ -394,7 +402,7 @@
   --type-color: #8a8f99;
 }
 .type-note {
-  --type-color: #ff9640;
+  --type-color: #ff1a1a;
 }
 .type-other {
   --type-color: #6d7280;
