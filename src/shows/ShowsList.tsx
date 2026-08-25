@@ -82,19 +82,47 @@ export default function ShowsList() {
       ) : shows.length === 0 ? (
         <p>No shows yet. Create your first one above.</p>
       ) : (
-        <ul>
+        <div className="shows-grid">
           {shows.map((show) => (
-            <li key={show.id}>
-              <Link to={`/shows/${show.id}`}>
+            <Link key={show.id} to={`/shows/${show.id}`} className={`show-card status-${show.status}`}>
+              <div className="show-card-top">
                 <span className="show-title">{show.title}</span>
-                <span className="show-meta">
-                  {new Date(show.scheduledAt).toLocaleString()} · {show.targetDurationMinutes}min ·{' '}
-                  {show.status}
-                </span>
-              </Link>
-            </li>
+                <span className={`show-status-badge status-${show.status}`}>{show.status}</span>
+              </div>
+
+              <div className="show-card-row">
+                <span className="show-card-icon">📅</span>
+                {new Date(show.scheduledAt).toLocaleString(undefined, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                })}
+              </div>
+
+              <div className="show-card-row">
+                <span className="show-card-icon">⏱️</span>
+                {show.targetDurationMinutes} min
+              </div>
+
+              {show.location && (
+                <div className="show-card-row">
+                  <span className="show-card-icon">📍</span>
+                  {show.location}
+                </div>
+              )}
+
+              {(show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
+                <div className="show-card-row">
+                  <span className="show-card-icon">👥</span>
+                  {show.teamMembers.length > 0 && `${show.teamMembers.length} team`}
+                  {show.teamMembers.length > 0 && show.guestEmails.length > 0 && ' · '}
+                  {show.guestEmails.length > 0 && `${show.guestEmails.length} guest`}
+                </div>
+              )}
+
+              {show.notes && <p className="show-card-notes">{show.notes}</p>}
+            </Link>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   )
