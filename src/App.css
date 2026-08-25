@@ -879,6 +879,15 @@
   margin: 0 auto;
 }
 
+.video-preview-modal-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+}
+
 .ready-checkbox-label {
   display: flex;
   align-items: center;

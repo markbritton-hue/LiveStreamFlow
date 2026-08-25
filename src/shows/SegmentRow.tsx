@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import {
   detectAssetType,
   getImageDisplayUrl,
+  getVideoEmbedUrl,
   getVideoThumbnail,
   SEGMENT_TYPE_LABELS,
   type Section,
@@ -80,6 +81,7 @@ export default function SegmentRow({
     : isGraphicBlock && assetUrl
       ? getImageDisplayUrl(assetUrl)
       : null
+  const videoEmbed = isVideoBlock && assetUrl ? getVideoEmbedUrl(assetUrl) : null
 
   async function moveToSection(targetSectionId: string) {
     if (targetSectionId === segment.sectionId) return
@@ -360,8 +362,27 @@ export default function SegmentRow({
       </div>
 
       {showImagePreview && mediaThumbnail && (
-        <Modal title={segment.title || 'Image'} onClose={() => setShowImagePreview(false)} size="large">
-          <img src={mediaThumbnail} alt={segment.title} className="image-preview-modal-img" />
+        <Modal
+          title={segment.title || (isVideoBlock ? 'Video' : 'Image')}
+          onClose={() => setShowImagePreview(false)}
+          size="large"
+        >
+          {isVideoBlock && videoEmbed?.kind === 'iframe' && (
+            <iframe
+              src={videoEmbed.src}
+              className="video-preview-modal-frame"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              title={segment.title || 'Video'}
+            />
+          )}
+          {isVideoBlock && videoEmbed?.kind === 'video' && (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video src={videoEmbed.src} controls autoPlay className="video-preview-modal-frame" />
+          )}
+          {(!isVideoBlock || !videoEmbed) && (
+            <img src={mediaThumbnail} alt={segment.title} className="image-preview-modal-img" />
+          )}
         </Modal>
       )}
     </div>

@@ -88,6 +88,28 @@ export function getVideoThumbnail(url: string): string | null {
   return getDriveThumbnail(url)
 }
 
+const DIRECT_VIDEO_FILE = /\.(mp4|webm|ogg|mov)(\?.*)?$/i
+
+export function getVideoEmbedUrl(url: string): { kind: 'iframe' | 'video'; src: string } | null {
+  if (!url) return null
+
+  const youtubeMatch = url.match(YOUTUBE_ID)
+  if (youtubeMatch) {
+    return { kind: 'iframe', src: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1` }
+  }
+
+  const driveMatch = url.match(GOOGLE_DRIVE_ID)
+  if (driveMatch) {
+    return { kind: 'iframe', src: `https://drive.google.com/file/d/${driveMatch[1]}/preview` }
+  }
+
+  if (DIRECT_VIDEO_FILE.test(url)) {
+    return { kind: 'video', src: url }
+  }
+
+  return null
+}
+
 export function getImageDisplayUrl(url: string): string {
   if (!url) return url
 
