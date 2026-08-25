@@ -6,6 +6,7 @@ import SignIn from './auth/SignIn'
 import ShowsList from './shows/ShowsList'
 import ShowDetail from './shows/ShowDetail'
 import logo from './assets/logo.png'
+import BackButton from './components/BackButton'
 import './App.css'
 
 function AppShell() {
@@ -17,7 +18,10 @@ function AppShell() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <img src={logo} alt="LiveStreamFlow" className="app-logo" />
+        <div className="app-header-left">
+          <BackButton />
+          <img src={logo} alt="LiveStreamFlow" className="app-logo" />
+        </div>
         <span className="app-user">
           {user.email}
           <button type="button" className="link-button" onClick={() => signOut(auth)}>

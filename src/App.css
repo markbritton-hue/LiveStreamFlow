@@ -19,6 +19,27 @@
   display: block;
 }
 
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.back-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* Rundown layout: palette sidebar + main content */
 
 .rundown-layout {
@@ -397,12 +418,6 @@
 }
 
 /* Show detail / rundown */
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 12px;
-  font-size: 14px;
-}
 
 .show-detail-header {
   display: flex;

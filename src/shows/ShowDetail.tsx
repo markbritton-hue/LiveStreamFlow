@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useShow } from './useShow'
 import { updateShow } from './useShows'
 import RundownBuilder from './RundownBuilder'
@@ -47,10 +47,6 @@ export default function ShowDetail() {
 
   return (
     <div className="show-detail">
-      <Link to="/" className="back-link">
-        ← All shows
-      </Link>
-
       {!editing ? (
         <>
           <div className="show-detail-header">
