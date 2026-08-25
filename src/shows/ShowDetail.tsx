@@ -83,18 +83,12 @@ export default function ShowDetail() {
             </div>
           </div>
 
-          {(show.notes || show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
+          {(show.notes || show.guestEmails.length > 0) && (
             <div className="show-info-panel">
               {show.notes && (
                 <div className="show-info-row">
                   <span className="show-info-label">Notes</span>
                   <p>{show.notes}</p>
-                </div>
-              )}
-              {show.teamMembers.length > 0 && (
-                <div className="show-info-row">
-                  <span className="show-info-label">Team</span>
-                  <p>{show.teamMembers.join(', ')}</p>
                 </div>
               )}
               {show.guestEmails.length > 0 && (
