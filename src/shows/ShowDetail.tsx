@@ -173,6 +173,10 @@ export default function ShowDetail() {
                 value={draft.assetsFolderUrl}
                 onChange={(e) => setDraft({ ...draft, assetsFolderUrl: e.target.value })}
               />
+              <span className="field-hint">
+                Link the folder that directly contains your files, not a parent folder — the popup
+                preview can only show one folder level.
+              </span>
             </label>
 
             <label>

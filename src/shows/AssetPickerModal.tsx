@@ -22,8 +22,10 @@ export default function AssetPickerModal({
   return (
     <Modal title="Assets Folder" onClose={onClose} size="large">
       <p className="asset-picker-hint">
-        Browse the folder below, then right-click a file → <strong>Get link</strong>, or open it and
-        copy its link — then paste it here.
+        Right-click a file below → <strong>Get link</strong>, then paste it here.{' '}
+        <strong>Note:</strong> this shows one folder level only — clicking into a subfolder will open it
+        in a new browser tab instead of staying in this popup. For best results, set the show's Assets
+        Folder link directly to the folder containing your files.
       </p>
 
       {embedUrl ? (
