@@ -1008,6 +1008,13 @@
 
 .block-live-dimmed[class*='type-'] {
   background: var(--surface);
+  color: var(--text);
+}
+
+.block-live-dimmed input,
+.block-live-dimmed select,
+.block-live-dimmed textarea {
+  color: var(--text) !important;
 }
 
 .ready-badge {
