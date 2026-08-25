@@ -110,15 +110,6 @@ export default function ShowsList() {
                 </div>
               )}
 
-              {(show.teamMembers.length > 0 || show.guestEmails.length > 0) && (
-                <div className="show-card-row">
-                  <span className="show-card-icon">👥</span>
-                  {show.teamMembers.length > 0 && `${show.teamMembers.length} team`}
-                  {show.teamMembers.length > 0 && show.guestEmails.length > 0 && ' · '}
-                  {show.guestEmails.length > 0 && `${show.guestEmails.length} guest`}
-                </div>
-              )}
-
               {show.notes && <p className="show-card-notes">{show.notes}</p>}
             </Link>
           ))}
