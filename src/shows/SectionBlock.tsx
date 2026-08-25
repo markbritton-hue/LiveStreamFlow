@@ -4,6 +4,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { durationToMinutes, type Section, type Segment } from '../types'
 import { addSegment } from './useSegments'
 import { deleteSection, renameSection } from './useSections'
+import { matchesFilters, type AssetFilter, type ReadyFilter } from './rundownFilters'
 import SegmentRow from './SegmentRow'
 
 export default function SectionBlock({
@@ -12,12 +13,16 @@ export default function SectionBlock({
   sections,
   segments,
   dropBeforeId,
+  readyFilter = 'all',
+  assetFilter = 'all',
 }: {
   showId: string
   section: Section
   sections: Section[]
   segments: Segment[]
   dropBeforeId?: string | null
+  readyFilter?: ReadyFilter
+  assetFilter?: AssetFilter
 }) {
   const [title, setTitle] = useState('')
   const [collapsed, setCollapsed] = useState(false)
@@ -85,8 +90,15 @@ export default function SectionBlock({
               {ordered.length === 0 && (
                 <p className="timeline-empty">Drag a block here, or use the form below.</p>
               )}
+              {ordered.length > 0 &&
+                !ordered.some((s) => matchesFilters(s, readyFilter, assetFilter)) && (
+                  <p className="timeline-empty">No blocks match the current filters.</p>
+                )}
               {ordered.map((segment) => (
-                <div key={segment.id}>
+                <div
+                  key={segment.id}
+                  className={matchesFilters(segment, readyFilter, assetFilter) ? undefined : 'filtered-out'}
+                >
                   {dropBeforeId === segment.id && <div className="drop-indicator" />}
                   <SegmentRow showId={showId} segment={segment} sections={sections} />
                 </div>

@@ -11,11 +11,13 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import { SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
+import type { ReadyFilter, AssetFilter } from './rundownFilters'
 import { addSegment, reorderSegments, useSegments } from './useSegments'
 import { createSection, useSections } from './useSections'
 import SectionBlock from './SectionBlock'
 import BlockPalette from './BlockPalette'
 import SegmentTypeIcon from './SegmentTypeIcon'
+import RundownFilterBar from './RundownFilterBar'
 
 interface DragData {
   source?: 'palette'
@@ -28,6 +30,8 @@ export default function RundownBuilder({ show }: { show: Show }) {
   const [creatingDefault, setCreatingDefault] = useState(false)
   const [activeDrag, setActiveDrag] = useState<DragData | null>(null)
   const [overId, setOverId] = useState<string | null>(null)
+  const [readyFilter, setReadyFilter] = useState<ReadyFilter>('all')
+  const [assetFilter, setAssetFilter] = useState<AssetFilter>('all')
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   useEffect(() => {
@@ -140,6 +144,13 @@ export default function RundownBuilder({ show }: { show: Show }) {
         <BlockPalette />
 
         <div className="rundown-builder">
+          <RundownFilterBar
+            readyFilter={readyFilter}
+            onReadyFilterChange={setReadyFilter}
+            assetFilter={assetFilter}
+            onAssetFilterChange={setAssetFilter}
+          />
+
           {loading ? (
             <p>Loading rundown…</p>
           ) : (
@@ -151,6 +162,8 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 sections={sections}
                 segments={segments.filter((s) => s.sectionId === section.id)}
                 dropBeforeId={activeDrag?.source === 'palette' ? overId : null}
+                readyFilter={readyFilter}
+                assetFilter={assetFilter}
               />
             ))
           )}
