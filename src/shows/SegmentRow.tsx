@@ -147,9 +147,9 @@ export default function SegmentRow({
           </button>
         )}
 
-        {!expanded && isMediaBlock && segment.assetUrl && (
+        {!expanded && isMediaBlock && (segment.assetUrl || segment.notes) && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
-            {segment.assetUrl}
+            {isVideoBlock && segment.notes ? segment.notes : segment.assetUrl}
           </button>
         )}
 
@@ -192,6 +192,16 @@ export default function SegmentRow({
               <div className="block-asset-preview">
                 <img src={mediaThumbnail} alt={segment.title} loading="lazy" />
               </div>
+            )}
+
+            {isVideoBlock && (
+              <textarea
+                className="segment-script"
+                placeholder="Notes..."
+                value={segment.notes}
+                onChange={(e) => updateSegment(showId, segment.id, { notes: e.target.value })}
+                rows={2}
+              />
             )}
           </div>
         )}
