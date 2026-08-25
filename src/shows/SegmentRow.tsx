@@ -28,10 +28,12 @@ export default function SegmentRow({
   showId,
   segment,
   sections,
+  onDuplicate,
 }: {
   showId: string
   segment: Segment
   sections: Section[]
+  onDuplicate?: () => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
@@ -155,6 +157,28 @@ export default function SegmentRow({
               onChange={(e) => updateSegment(showId, segment.id, { ready: e.target.checked })}
             />
           </label>
+
+          <button
+            type="button"
+            className="duplicate-button"
+            onClick={() => onDuplicate?.()}
+            aria-label="Duplicate block"
+            title="Duplicate block"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="8" y="8" width="13" height="13" rx="2" />
+              <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+            </svg>
+          </button>
 
           <button
             type="button"

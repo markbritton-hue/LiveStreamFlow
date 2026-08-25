@@ -823,7 +823,7 @@
 
 .block-header {
   display: grid;
-  grid-template-columns: 20px 24px 2fr 1fr 110px 44px 20px 24px;
+  grid-template-columns: 20px 24px 2fr 1fr 110px 44px 20px 20px 24px;
   gap: 6px;
   align-items: center;
 }
@@ -990,6 +990,20 @@
   background: none;
   border: none;
   color: var(--danger);
+}
+
+.duplicate-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.duplicate-button:hover {
+  color: var(--accent);
 }
 
 .new-segment-form {

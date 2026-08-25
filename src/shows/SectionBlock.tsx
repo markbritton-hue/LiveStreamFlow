@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { durationToMinutes, type Section, type Segment } from '../types'
-import { addSegment } from './useSegments'
+import { addSegment, reorderSegments } from './useSegments'
 import { deleteSection, renameSection } from './useSections'
 import { matchesFilters, type AssetFilter, type ReadyFilter } from './rundownFilters'
 import SegmentRow from './SegmentRow'
@@ -54,6 +54,17 @@ export default function SectionBlock({
     setTitle('')
   }
 
+  async function handleDuplicate(segment: Segment) {
+    const { id, order, ...rest } = segment
+    void id
+    void order
+    const newId = await addSegment(showId, rest, ordered.length)
+    const orderedIds = ordered.map((s) => s.id)
+    const insertIndex = orderedIds.indexOf(segment.id) + 1
+    orderedIds.splice(insertIndex, 0, newId)
+    await reorderSegments(showId, orderedIds)
+  }
+
   return (
     <section className="section-block">
       <div className="section-header">
@@ -100,7 +111,12 @@ export default function SectionBlock({
                   className={matchesFilters(segment, readyFilter, assetFilter) ? undefined : 'filtered-out'}
                 >
                   {dropBeforeId === segment.id && <div className="drop-indicator" />}
-                  <SegmentRow showId={showId} segment={segment} sections={sections} />
+                  <SegmentRow
+                    showId={showId}
+                    segment={segment}
+                    sections={sections}
+                    onDuplicate={() => handleDuplicate(segment)}
+                  />
                 </div>
               ))}
               {dropBeforeId === `section-${section.id}` && ordered.length > 0 && (
