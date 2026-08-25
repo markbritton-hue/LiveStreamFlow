@@ -14,6 +14,7 @@ import {
 import { deleteSegment, updateSegment } from './useSegments'
 import SegmentTypeIcon from './SegmentTypeIcon'
 import Modal from '../components/Modal'
+import AssetPickerModal from './AssetPickerModal'
 
 const TYPES = Object.keys(SEGMENT_TYPE_LABELS) as SegmentType[]
 
@@ -43,6 +44,7 @@ export default function SegmentRow({
   })
   const [expanded, setExpanded] = useState(false)
   const [showImagePreview, setShowImagePreview] = useState(false)
+  const [showAssetPicker, setShowAssetPicker] = useState(false)
 
   // Local-first text state: typing updates these immediately and writes through to
   // Firestore, but the displayed value never gets overwritten by the async
@@ -293,15 +295,14 @@ export default function SegmentRow({
               </a>
             )}
             {assetsFolderUrl && (
-              <a
+              <button
+                type="button"
                 className="asset-folder-link"
-                href={assetsFolderUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Open assets folder"
+                onClick={() => setShowAssetPicker(true)}
+                title="Browse assets folder"
               >
                 📁
-              </a>
+              </button>
             )}
             {mediaThumbnail && (
               <button
@@ -386,15 +387,14 @@ export default function SegmentRow({
                 </a>
               )}
               {assetsFolderUrl && (
-                <a
+                <button
+                  type="button"
                   className="asset-folder-link"
-                  href={assetsFolderUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Open assets folder"
+                  onClick={() => setShowAssetPicker(true)}
+                  title="Browse assets folder"
                 >
                   📁
-                </a>
+                </button>
               )}
               {sections.length > 1 && (
                 <select
@@ -447,6 +447,17 @@ export default function SegmentRow({
             <img src={mediaThumbnail} alt={segment.title} className="image-preview-modal-img" />
           )}
         </Modal>
+      )}
+
+      {showAssetPicker && assetsFolderUrl && (
+        <AssetPickerModal
+          folderUrl={assetsFolderUrl}
+          onClose={() => setShowAssetPicker(false)}
+          onSelect={(url) => {
+            commitField(setAssetUrl, 'assetUrl', url)
+            setShowAssetPicker(false)
+          }}
+        />
       )}
     </div>
   )

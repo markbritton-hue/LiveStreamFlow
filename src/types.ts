@@ -78,6 +78,13 @@ export function detectAssetType(url: string): AssetType {
 const YOUTUBE_ID = /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/i
 const GOOGLE_DRIVE_ID = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/i
 
+const GOOGLE_DRIVE_FOLDER_ID = /drive\.google\.com\/drive\/folders\/([\w-]+)/i
+
+export function getDriveFolderEmbedUrl(url: string): string | null {
+  const match = url.match(GOOGLE_DRIVE_FOLDER_ID)
+  return match ? `https://drive.google.com/embeddedfolderview?id=${match[1]}#list` : null
+}
+
 function getDriveThumbnail(url: string): string | null {
   const match = url.match(GOOGLE_DRIVE_ID)
   return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000` : null
