@@ -819,7 +819,7 @@
 
 .block-header {
   display: grid;
-  grid-template-columns: 20px 24px 2fr 1fr 110px 28px 20px 24px;
+  grid-template-columns: 20px 24px 2fr 1fr 110px 44px 20px 24px;
   gap: 6px;
   align-items: center;
 }
@@ -828,13 +828,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
 }
 
 .block-header-thumb {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   object-fit: cover;
   border-radius: 4px;
   border: 1px solid var(--border);
