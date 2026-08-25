@@ -12,8 +12,9 @@ const PATHS: Record<SegmentType, ReactNode> = {
   ),
   video: (
     <>
-      <rect x="2" y="6" width="14" height="12" rx="2" />
-      <path d="M16 10.5 22 7v10l-6-3.5z" />
+      <path d="M6 2h9l5 5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20V3.5A1.5 1.5 0 0 1 6 2z" />
+      <path d="M15 2v4.5A1.5 1.5 0 0 0 16.5 8H20" />
+      <path d="M10.5 11.5 15 14l-4.5 2.5z" />
     </>
   ),
   graphic: (
@@ -32,8 +33,8 @@ const PATHS: Record<SegmentType, ReactNode> = {
   ),
   'camera-shot': (
     <>
-      <path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
-      <circle cx="12" cy="14" r="4" />
+      <rect x="2" y="6" width="14" height="12" rx="2" />
+      <path d="M16 10.5 22 7v10l-6-3.5z" />
     </>
   ),
   lighting: (
