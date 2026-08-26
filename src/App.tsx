@@ -7,10 +7,13 @@ import ShowsList from './shows/ShowsList'
 import ShowDetail from './shows/ShowDetail'
 import logo from './assets/logo.png'
 import BackButton from './components/BackButton'
+import OnlineUsers from './components/OnlineUsers'
+import { usePresence } from './presence/usePresence'
 import './App.css'
 
 function AppShell() {
   const { user, loading } = useAuth()
+  usePresence(user)
 
   if (loading) return <p>Loading…</p>
   if (!user) return <SignIn />
@@ -20,6 +23,7 @@ function AppShell() {
       <header className="app-header">
         <div className="app-header-left">
           <img src={logo} alt="LiveStreamFlow" className="app-logo" />
+          <OnlineUsers currentUserEmail={user.email} />
         </div>
         <span className="app-user">
           <BackButton />
