@@ -1,4 +1,4 @@
-import { useState, type DragEvent } from 'react'
+import { useEffect, useState, type DragEvent } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
@@ -17,6 +17,13 @@ import Modal from '../components/Modal'
 import AssetPickerModal from './AssetPickerModal'
 
 const TYPES = Object.keys(SEGMENT_TYPE_LABELS) as SegmentType[]
+
+function formatVideoLength(seconds: number): string {
+  const totalSeconds = Math.round(seconds)
+  const minutes = Math.floor(totalSeconds / 60)
+  const secs = totalSeconds % 60
+  return `${minutes}:${String(secs).padStart(2, '0')}`
+}
 
 const ASSET_ICON: Record<ReturnType<typeof detectAssetType>, string> = {
   image: '🖼️',
@@ -95,6 +102,29 @@ export default function SegmentRow({
       ? getImageDisplayUrl(assetUrl)
       : null
   const videoEmbed = isVideoBlock && assetUrl ? getVideoEmbedUrl(assetUrl) : null
+
+  const [detectedLengthSeconds, setDetectedLengthSeconds] = useState<number | null>(null)
+
+  useEffect(() => {
+    setDetectedLengthSeconds(null)
+    if (!isVideoBlock || videoEmbed?.kind !== 'video') return
+
+    const videoEl = document.createElement('video')
+    videoEl.preload = 'metadata'
+    videoEl.src = videoEmbed.src
+
+    function handleLoaded() {
+      if (Number.isFinite(videoEl.duration)) {
+        setDetectedLengthSeconds(videoEl.duration)
+      }
+    }
+
+    videoEl.addEventListener('loadedmetadata', handleLoaded)
+    return () => {
+      videoEl.removeEventListener('loadedmetadata', handleLoaded)
+      videoEl.src = ''
+    }
+  }, [isVideoBlock, videoEmbed?.kind, videoEmbed?.src])
 
   async function moveToSection(targetSectionId: string) {
     if (liveMode || targetSectionId === segment.sectionId) return
@@ -280,6 +310,11 @@ export default function SegmentRow({
                     onError={() => setFailedImageUrl(mediaThumbnail)}
                   />
                   {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
+                  {isVideoBlock && detectedLengthSeconds !== null && (
+                    <span className="block-header-thumb-length">
+                      {formatVideoLength(detectedLengthSeconds)}
+                    </span>
+                  )}
                 </button>
               ))}
           </span>
@@ -371,6 +406,11 @@ export default function SegmentRow({
               <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                 Open
               </a>
+            )}
+            {isVideoBlock && detectedLengthSeconds !== null && (
+              <span className="video-length-badge" title="Video length">
+                ⏱ {formatVideoLength(detectedLengthSeconds)}
+              </span>
             )}
             {assetsFolderUrl && !liveMode && (
               <button
