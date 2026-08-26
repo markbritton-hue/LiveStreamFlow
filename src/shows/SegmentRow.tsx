@@ -335,7 +335,7 @@ export default function SegmentRow({
           </button>
         )}
 
-        {!expanded && isVideoBlock && notes && (
+        {!expanded && (isVideoBlock || isMusicBlock) && notes && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
             {notes}
           </button>
@@ -404,7 +404,7 @@ export default function SegmentRow({
                 </button>
               ))}
 
-            {isVideoBlock && (
+            {(isVideoBlock || isMusicBlock) && (
               <textarea
                 className="segment-script"
                 placeholder="Notes..."
