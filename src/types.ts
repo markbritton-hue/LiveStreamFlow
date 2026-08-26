@@ -91,6 +91,11 @@ function getDriveThumbnail(url: string): string | null {
   return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000` : null
 }
 
+export function getDriveDirectFileUrl(url: string): string | null {
+  const match = url.match(GOOGLE_DRIVE_ID)
+  return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : null
+}
+
 export function getVideoThumbnail(url: string): string | null {
   if (!url) return null
   const youtubeMatch = url.match(YOUTUBE_ID)

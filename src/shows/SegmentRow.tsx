@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import {
   detectAssetType,
   getImageDisplayUrl,
+  getDriveDirectFileUrl,
   getVideoEmbedUrl,
   getVideoThumbnail,
   SEGMENT_TYPE_LABELS,
@@ -107,11 +108,14 @@ export default function SegmentRow({
 
   useEffect(() => {
     setDetectedLengthSeconds(null)
-    if (!isVideoBlock || videoEmbed?.kind !== 'video') return
+    if (!isVideoBlock || !assetUrl) return
+
+    const probeUrl = videoEmbed?.kind === 'video' ? videoEmbed.src : getDriveDirectFileUrl(assetUrl)
+    if (!probeUrl) return
 
     const videoEl = document.createElement('video')
     videoEl.preload = 'metadata'
-    videoEl.src = videoEmbed.src
+    videoEl.src = probeUrl
 
     function handleLoaded() {
       if (Number.isFinite(videoEl.duration)) {
@@ -120,11 +124,14 @@ export default function SegmentRow({
     }
 
     videoEl.addEventListener('loadedmetadata', handleLoaded)
+    videoEl.addEventListener('error', () => {
+      // Drive link isn't publicly accessible or isn't a video — silently give up.
+    })
     return () => {
       videoEl.removeEventListener('loadedmetadata', handleLoaded)
       videoEl.src = ''
     }
-  }, [isVideoBlock, videoEmbed?.kind, videoEmbed?.src])
+  }, [isVideoBlock, assetUrl, videoEmbed?.kind, videoEmbed?.src])
 
   async function moveToSection(targetSectionId: string) {
     if (liveMode || targetSectionId === segment.sectionId) return
