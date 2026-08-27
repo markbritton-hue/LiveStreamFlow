@@ -26,3 +26,6 @@ dist-ssr
 
 # Source design files (processed copies live in src/assets, public)
 livestreamlogo2.png
+
+# Session handoff docs (personal/session context, not project code)
+docs/handoffs/
