@@ -1101,27 +1101,13 @@
   pointer-events: none;
 }
 
-.block-header-thumb-length {
-  position: absolute;
-  right: 2px;
-  bottom: 2px;
-  z-index: 1;
-  padding: 1px 3px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  font-size: 9px;
+.video-length-badge-large {
+  flex-basis: 100%;
+  width: 100%;
+  margin-top: 6px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.3;
-  pointer-events: none;
-}
-
-.video-length-badge {
-  flex-shrink: 0;
-  font-size: 12px;
-  font-weight: 600;
   color: var(--text-h);
-  white-space: nowrap;
 }
 
 .block-header-thumb {

@@ -325,11 +325,6 @@ export default function SegmentRow({
                     onError={() => setFailedImageUrl(mediaThumbnail)}
                   />
                   {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
-                  {isVideoBlock && detectedLengthSeconds !== null && (
-                    <span className="block-header-thumb-length">
-                      {formatVideoLength(detectedLengthSeconds)}
-                    </span>
-                  )}
                 </button>
               ))}
           </span>
@@ -422,11 +417,6 @@ export default function SegmentRow({
                 Open
               </a>
             )}
-            {isVideoBlock && detectedLengthSeconds !== null && (
-              <span className="video-length-badge" title="Video length">
-                ⏱ {formatVideoLength(detectedLengthSeconds)}
-              </span>
-            )}
             {assetsFolderUrl && !liveMode && (
               <button
                 type="button"
@@ -458,6 +448,12 @@ export default function SegmentRow({
                   {isVideoBlock && <span className="block-asset-preview-play">▶</span>}
                 </button>
               ))}
+
+            {isVideoBlock && detectedLengthSeconds !== null && (
+              <div className="video-length-badge-large">
+                ⏱ {formatVideoLength(detectedLengthSeconds)}
+              </div>
+            )}
 
             {(isVideoBlock || isMusicBlock) && (
               <textarea
