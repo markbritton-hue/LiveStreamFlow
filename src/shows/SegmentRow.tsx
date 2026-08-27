@@ -4,6 +4,8 @@ import { CSS } from '@dnd-kit/utilities'
 import {
   detectAssetType,
   getImageDisplayUrl,
+  getDirectAudioUrl,
+  getDriveDirectFileUrl,
   getDriveFileId,
   getVideoEmbedUrl,
   getVideoThumbnail,
@@ -109,37 +111,61 @@ export default function SegmentRow({
 
   useEffect(() => {
     setDetectedLengthSeconds(null)
-    if (!isVideoBlock || !assetUrl) return
+    if (!(isVideoBlock || isMusicBlock) || !assetUrl) return
 
-    const driveFileId = getDriveFileId(assetUrl)
-    if (driveFileId) {
-      let cancelled = false
-      fetchDriveVideoDurationSeconds(driveFileId).then((seconds) => {
-        if (!cancelled && seconds !== null) setDetectedLengthSeconds(seconds)
-      })
+    if (isVideoBlock) {
+      const driveFileId = getDriveFileId(assetUrl)
+      if (driveFileId) {
+        let cancelled = false
+        fetchDriveVideoDurationSeconds(driveFileId).then((seconds) => {
+          if (!cancelled && seconds !== null) setDetectedLengthSeconds(seconds)
+        })
+        return () => {
+          cancelled = true
+        }
+      }
+
+      if (videoEmbed?.kind !== 'video') return
+
+      const videoEl = document.createElement('video')
+      videoEl.preload = 'metadata'
+      videoEl.src = videoEmbed.src
+
+      function handleLoaded() {
+        if (Number.isFinite(videoEl.duration)) {
+          setDetectedLengthSeconds(videoEl.duration)
+        }
+      }
+
+      videoEl.addEventListener('loadedmetadata', handleLoaded)
       return () => {
-        cancelled = true
+        videoEl.removeEventListener('loadedmetadata', handleLoaded)
+        videoEl.src = ''
       }
     }
 
-    if (videoEmbed?.kind !== 'video') return
+    // Music block: Drive's API has no audio-duration field, so best-effort
+    // probe the direct download URL (works for some files, fails silently
+    // for others — same "can't scan for viruses" caveat as video).
+    const probeUrl = getDriveDirectFileUrl(assetUrl) ?? getDirectAudioUrl(assetUrl)
+    if (!probeUrl) return
 
-    const videoEl = document.createElement('video')
-    videoEl.preload = 'metadata'
-    videoEl.src = videoEmbed.src
+    const audioEl = document.createElement('audio')
+    audioEl.preload = 'metadata'
+    audioEl.src = probeUrl
 
-    function handleLoaded() {
-      if (Number.isFinite(videoEl.duration)) {
-        setDetectedLengthSeconds(videoEl.duration)
+    function handleAudioLoaded() {
+      if (Number.isFinite(audioEl.duration)) {
+        setDetectedLengthSeconds(audioEl.duration)
       }
     }
 
-    videoEl.addEventListener('loadedmetadata', handleLoaded)
+    audioEl.addEventListener('loadedmetadata', handleAudioLoaded)
     return () => {
-      videoEl.removeEventListener('loadedmetadata', handleLoaded)
-      videoEl.src = ''
+      audioEl.removeEventListener('loadedmetadata', handleAudioLoaded)
+      audioEl.src = ''
     }
-  }, [isVideoBlock, assetUrl, videoEmbed?.kind, videoEmbed?.src])
+  }, [isVideoBlock, isMusicBlock, assetUrl, videoEmbed?.kind, videoEmbed?.src])
 
   async function moveToSection(targetSectionId: string) {
     if (liveMode || targetSectionId === segment.sectionId) return
@@ -299,7 +325,7 @@ export default function SegmentRow({
           />
 
           <span className="video-length-pill-slot">
-            {isVideoBlock && detectedLengthSeconds !== null && (
+            {(isVideoBlock || isMusicBlock) && detectedLengthSeconds !== null && (
               <span className="video-length-pill">{formatVideoLength(detectedLengthSeconds)}</span>
             )}
           </span>

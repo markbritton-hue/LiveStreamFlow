@@ -130,6 +130,13 @@ export function getVideoEmbedUrl(url: string): { kind: 'iframe' | 'video'; src: 
   return null
 }
 
+const DIRECT_AUDIO_FILE = /\.(mp3|wav|m4a|aac|ogg|flac)(\?.*)?$/i
+
+export function getDirectAudioUrl(url: string): string | null {
+  if (!url) return null
+  return DIRECT_AUDIO_FILE.test(url) ? url : null
+}
+
 export function getImageDisplayUrl(url: string): string {
   if (!url) return url
 
