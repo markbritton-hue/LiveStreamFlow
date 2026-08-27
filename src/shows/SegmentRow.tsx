@@ -380,6 +380,12 @@ export default function SegmentRow({
           </button>
         )}
 
+        {!expanded && isVideoBlock && detectedLengthSeconds !== null && (
+          <div className="video-length-badge-large video-length-badge-collapsed">
+            ⏱ {formatVideoLength(detectedLengthSeconds)}
+          </div>
+        )}
+
         {!expanded && (isVideoBlock || isMusicBlock) && notes && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
             {notes}

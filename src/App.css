@@ -1110,6 +1110,10 @@
   color: var(--text-h);
 }
 
+.video-length-badge-collapsed {
+  margin-top: 0;
+}
+
 .block-header-thumb {
   width: 44px;
   height: 44px;
