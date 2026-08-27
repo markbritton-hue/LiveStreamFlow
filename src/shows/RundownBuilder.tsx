@@ -60,6 +60,10 @@ export default function RundownBuilder({ show }: { show: Show }) {
   }, [sections, segments])
 
   const currentIndex = flattenedSegments.findIndex((s) => s.id === currentSegmentId)
+  const currentGroupIds = useMemo(
+    () => (currentSegmentId ? getLinkedGroupIds(flattenedSegments, currentSegmentId) : []),
+    [flattenedSegments, currentSegmentId],
+  )
 
   function persistCurrent(segmentId: string | null) {
     setCurrentSegmentId(segmentId)
@@ -80,15 +84,23 @@ export default function RundownBuilder({ show }: { show: Show }) {
   }
 
   function handlePrev() {
-    if (currentIndex <= 0) return
-    const target = flattenedSegments[currentIndex - 1]
+    if (currentIndex <= 0 || currentGroupIds.length === 0) return
+    const groupStart = flattenedSegments.findIndex((s) => s.id === currentGroupIds[0])
+    if (groupStart <= 0) return
+    const prevSegment = flattenedSegments[groupStart - 1]
+    const prevGroupIds = getLinkedGroupIds(flattenedSegments, prevSegment.id)
+    const target = flattenedSegments.find((s) => s.id === prevGroupIds[0])
+    if (!target) return
     persistCurrent(target.id)
     scrollToSegment(target.id)
   }
 
   function handleNext() {
-    if (currentIndex === -1 || currentIndex >= flattenedSegments.length - 1) return
-    const target = flattenedSegments[currentIndex + 1]
+    if (currentIndex === -1 || currentGroupIds.length === 0) return
+    const groupStart = flattenedSegments.findIndex((s) => s.id === currentGroupIds[0])
+    const groupEnd = groupStart + currentGroupIds.length - 1
+    if (groupEnd >= flattenedSegments.length - 1) return
+    const target = flattenedSegments[groupEnd + 1]
     persistCurrent(target.id)
     scrollToSegment(target.id)
   }
@@ -265,7 +277,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 assetFilter={assetFilter}
                 assetsFolderUrl={show.assetsFolderUrl}
                 liveMode={liveMode}
-                currentSegmentId={currentSegmentId}
+                currentGroupIds={currentGroupIds}
                 onSetCurrent={handleSetCurrent}
               />
             ))

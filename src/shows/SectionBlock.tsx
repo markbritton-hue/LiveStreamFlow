@@ -31,7 +31,7 @@ export default function SectionBlock({
   assetFilter = 'all',
   assetsFolderUrl,
   liveMode = false,
-  currentSegmentId,
+  currentGroupIds = [],
   onSetCurrent,
 }: {
   showId: string
@@ -43,7 +43,7 @@ export default function SectionBlock({
   assetFilter?: AssetFilter
   assetsFolderUrl?: string
   liveMode?: boolean
-  currentSegmentId?: string | null
+  currentGroupIds?: string[]
   onSetCurrent?: (segmentId: string) => void
 }) {
   const [collapsed, setCollapsed] = useState(false)
@@ -136,7 +136,7 @@ export default function SectionBlock({
                           onDuplicate={() => handleDuplicate(segment)}
                           assetsFolderUrl={assetsFolderUrl}
                           liveMode={liveMode}
-                          isCurrent={liveMode && segment.id === currentSegmentId}
+                          isCurrent={liveMode && currentGroupIds.includes(segment.id)}
                           onSetCurrent={onSetCurrent}
                           isLastInSection={index === ordered.length - 1}
                         />
