@@ -182,7 +182,7 @@
 }
 
 .block-live-current[class*='type-'] {
-  background: var(--type-color, var(--accent)) !important;
+  background: color-mix(in srgb, var(--type-color, var(--accent)) 70%, white) !important;
   color: #fff;
 }
 
