@@ -183,13 +183,13 @@
 
 .block-live-current[class*='type-'] {
   background: color-mix(in srgb, var(--type-color, var(--accent)) 70%, white) !important;
-  color: #fff;
+  color: #1a1a1a;
 }
 
 .block-live-current input,
 .block-live-current select,
 .block-live-current textarea {
-  color: #fff !important;
+  color: #1a1a1a !important;
 }
 
 .drag-handle-disabled {
