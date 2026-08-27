@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import {
   detectAssetType,
   getImageDisplayUrl,
-  getDriveDirectFileUrl,
+  getDriveFileId,
   getVideoEmbedUrl,
   getVideoThumbnail,
   SEGMENT_TYPE_LABELS,
@@ -13,6 +13,7 @@ import {
   type SegmentType,
 } from '../types'
 import { deleteSegment, updateSegment } from './useSegments'
+import { fetchDriveVideoDurationSeconds } from './driveApi'
 import SegmentTypeIcon from './SegmentTypeIcon'
 import Modal from '../components/Modal'
 import AssetPickerModal from './AssetPickerModal'
@@ -110,12 +111,22 @@ export default function SegmentRow({
     setDetectedLengthSeconds(null)
     if (!isVideoBlock || !assetUrl) return
 
-    const probeUrl = videoEmbed?.kind === 'video' ? videoEmbed.src : getDriveDirectFileUrl(assetUrl)
-    if (!probeUrl) return
+    const driveFileId = getDriveFileId(assetUrl)
+    if (driveFileId) {
+      let cancelled = false
+      fetchDriveVideoDurationSeconds(driveFileId).then((seconds) => {
+        if (!cancelled && seconds !== null) setDetectedLengthSeconds(seconds)
+      })
+      return () => {
+        cancelled = true
+      }
+    }
+
+    if (videoEmbed?.kind !== 'video') return
 
     const videoEl = document.createElement('video')
     videoEl.preload = 'metadata'
-    videoEl.src = probeUrl
+    videoEl.src = videoEmbed.src
 
     function handleLoaded() {
       if (Number.isFinite(videoEl.duration)) {
@@ -124,9 +135,6 @@ export default function SegmentRow({
     }
 
     videoEl.addEventListener('loadedmetadata', handleLoaded)
-    videoEl.addEventListener('error', () => {
-      // Drive link isn't publicly accessible or isn't a video — silently give up.
-    })
     return () => {
       videoEl.removeEventListener('loadedmetadata', handleLoaded)
       videoEl.src = ''

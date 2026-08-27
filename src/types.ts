@@ -86,6 +86,11 @@ export function getDriveFolderEmbedUrl(url: string): string | null {
   return match ? `https://drive.google.com/embeddedfolderview?id=${match[1]}#list` : null
 }
 
+export function getDriveFileId(url: string): string | null {
+  const match = url.match(GOOGLE_DRIVE_ID)
+  return match ? match[1] : null
+}
+
 function getDriveThumbnail(url: string): string | null {
   const match = url.match(GOOGLE_DRIVE_ID)
   return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000` : null
