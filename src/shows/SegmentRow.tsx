@@ -272,6 +272,9 @@ export default function SegmentRow({
         className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}${isCurrent ? ' block-live-current' : ''}${liveMode && !isCurrent ? ' block-live-dimmed' : ''}`}
       >
         {segment.ready && <span className="ready-badge">✓ Ready</span>}
+        {!expanded && isVideoBlock && segment.loop && (
+          <span className="loop-badge">🔁 Loop</span>
+        )}
 
         <div className="block-header">
           <span
@@ -491,6 +494,18 @@ export default function SegmentRow({
                 disabled={liveMode}
               />
             )}
+
+            {isVideoBlock && (
+              <label className="loop-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={!!segment.loop}
+                  onChange={(e) => updateSegment(showId, segment.id, { loop: e.target.checked })}
+                  disabled={liveMode}
+                />
+                Loop video
+              </label>
+            )}
           </div>
         )}
 
@@ -624,7 +639,13 @@ export default function SegmentRow({
           )}
           {isVideoBlock && videoEmbed?.kind === 'video' && (
             // eslint-disable-next-line jsx-a11y/media-has-caption
-            <video src={videoEmbed.src} controls autoPlay className="video-preview-modal-frame" />
+            <video
+              src={videoEmbed.src}
+              controls
+              autoPlay
+              loop={segment.loop}
+              className="video-preview-modal-frame"
+            />
           )}
           {(!isVideoBlock || !videoEmbed) && (
             <img src={mediaThumbnail} alt={segment.title} className="image-preview-modal-img" />

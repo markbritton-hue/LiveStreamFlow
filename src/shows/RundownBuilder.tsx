@@ -158,6 +158,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
           status: 'not-started',
           assetUrl: '',
           ready: false,
+          loop: false,
         },
         sectionSegments.length,
       )

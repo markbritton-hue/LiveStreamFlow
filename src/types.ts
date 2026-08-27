@@ -62,6 +62,7 @@ export interface Segment {
   status: SegmentStatus
   assetUrl: string
   ready: boolean
+  loop: boolean
 }
 
 const IMAGE_EXT = /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i
