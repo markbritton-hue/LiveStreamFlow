@@ -299,9 +299,6 @@ export default function SegmentRow({
         className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}${isCurrent ? ' block-live-current' : ''}${liveMode && !isCurrent ? ' block-live-dimmed' : ''}`}
       >
         {segment.ready && <span className="ready-badge">✓ Ready</span>}
-        {!expanded && isVideoBlock && segment.loop && (
-          <span className="loop-badge">🔁 Loop</span>
-        )}
 
         <div className="block-header">
           <span
@@ -357,6 +354,11 @@ export default function SegmentRow({
           <span className="video-length-pill-slot">
             {(isVideoBlock || isMusicBlock) && detectedLengthSeconds !== null && (
               <span className="video-length-pill">{formatVideoLength(detectedLengthSeconds)}</span>
+            )}
+            {isVideoBlock && segment.loop && (
+              <span className="loop-icon" title="Loops">
+                🔁
+              </span>
             )}
           </span>
 
