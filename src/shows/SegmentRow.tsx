@@ -398,14 +398,16 @@ export default function SegmentRow({
               ))}
           </span>
 
-          <label className="ready-checkbox-label" title="Mark ready">
-            <input
-              type="checkbox"
-              checked={!!segment.ready}
-              onChange={(e) => updateSegment(showId, segment.id, { ready: e.target.checked })}
-              disabled={liveMode}
-            />
-          </label>
+          <span className="ready-checkbox-label">
+            {!liveMode && (
+              <input
+                type="checkbox"
+                checked={!!segment.ready}
+                onChange={(e) => updateSegment(showId, segment.id, { ready: e.target.checked })}
+                title="Mark ready"
+              />
+            )}
+          </span>
 
           {!liveMode && (
             <button
