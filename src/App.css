@@ -1189,8 +1189,11 @@
 }
 
 .loop-icon {
-  font-size: 10px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: transparent;
 }
 
 .video-length-pill {

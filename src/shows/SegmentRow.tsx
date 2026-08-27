@@ -357,7 +357,12 @@ export default function SegmentRow({
             )}
             {isVideoBlock && segment.loop && (
               <span className="loop-icon" title="Loops">
-                🔁
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17 2 21 6 17 10" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3 12v-2a4 4 0 0 1 4-4h14" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M7 22 3 18 7 14" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M21 12v2a4 4 0 0 1-4 4H3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </span>
             )}
           </span>
