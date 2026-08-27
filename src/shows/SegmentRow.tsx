@@ -299,34 +299,39 @@ export default function SegmentRow({
           />
 
           <span className="block-header-thumb-slot">
-            {(isGraphicBlock || isVideoBlock) &&
-              mediaThumbnail &&
-              (failedImageUrl === mediaThumbnail ? (
-                <a
-                  href={assetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block-header-thumb-fallback"
-                  title="Thumbnail unavailable — click to open the file"
-                >
-                  ⚠️
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  className="block-header-thumb-button"
-                  onClick={() => setShowImagePreview(true)}
-                  aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
-                >
-                  <img
-                    src={mediaThumbnail}
-                    alt=""
-                    className="block-header-thumb"
-                    onError={() => setFailedImageUrl(mediaThumbnail)}
-                  />
-                  {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
-                </button>
-              ))}
+            {(isGraphicBlock || isVideoBlock) && mediaThumbnail && (
+              <div className="block-header-thumb-wrap">
+                {failedImageUrl === mediaThumbnail ? (
+                  <a
+                    href={assetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block-header-thumb-fallback"
+                    title="Thumbnail unavailable — click to open the file"
+                  >
+                    ⚠️
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    className="block-header-thumb-button"
+                    onClick={() => setShowImagePreview(true)}
+                    aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
+                  >
+                    <img
+                      src={mediaThumbnail}
+                      alt=""
+                      className="block-header-thumb"
+                      onError={() => setFailedImageUrl(mediaThumbnail)}
+                    />
+                    {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
+                  </button>
+                )}
+                {isVideoBlock && detectedLengthSeconds !== null && (
+                  <span className="video-length-pill">{formatVideoLength(detectedLengthSeconds)}</span>
+                )}
+              </div>
+            )}
           </span>
 
           <label className="ready-checkbox-label" title="Mark ready">
@@ -378,12 +383,6 @@ export default function SegmentRow({
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>
             {scriptCopy || detail}
           </button>
-        )}
-
-        {!expanded && isVideoBlock && detectedLengthSeconds !== null && (
-          <div className="video-length-badge-large video-length-badge-collapsed">
-            ⏱ {formatVideoLength(detectedLengthSeconds)}
-          </div>
         )}
 
         {!expanded && (isVideoBlock || isMusicBlock) && notes && (
@@ -454,12 +453,6 @@ export default function SegmentRow({
                   {isVideoBlock && <span className="block-asset-preview-play">▶</span>}
                 </button>
               ))}
-
-            {isVideoBlock && detectedLengthSeconds !== null && (
-              <div className="video-length-badge-large">
-                ⏱ {formatVideoLength(detectedLengthSeconds)}
-              </div>
-            )}
 
             {(isVideoBlock || isMusicBlock) && (
               <textarea
