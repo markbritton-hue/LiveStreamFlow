@@ -918,39 +918,49 @@
 
 .timeline-connector {
   flex: 1;
-  min-height: 20px;
-  width: 4px;
+  min-height: 24px;
+  width: 40px;
   margin: 4px 0;
   padding: 0;
   border: none;
-  border-radius: 2px;
-  background: color-mix(in srgb, currentColor 15%, transparent);
+  background: transparent;
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.timeline-connector:hover {
-  background: color-mix(in srgb, var(--accent) 45%, transparent);
+.timeline-connector::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.timeline-connector::after {
+  content: '🔗';
+  position: relative;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.4;
+  white-space: nowrap;
+}
+
+.timeline-connector:hover::after {
+  opacity: 0.85;
 }
 
 .timeline-connector:disabled {
   cursor: default;
 }
 
-.timeline-connector::after {
-  content: '🔗';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 11px;
-  line-height: 1;
-  opacity: 0;
-  white-space: nowrap;
-}
-
-.timeline-connector-linked {
-  width: 6px;
+.timeline-connector-linked::before {
   background: var(--accent);
 }
 
