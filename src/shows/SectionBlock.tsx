@@ -100,7 +100,7 @@ export default function SectionBlock({
                 !ordered.some((s) => matchesFilters(s, readyFilter, assetFilter)) && (
                   <p className="timeline-empty">No blocks match the current filters.</p>
                 )}
-              {ordered.map((segment) => (
+              {ordered.map((segment, index) => (
                 <div
                   key={segment.id}
                   className={matchesFilters(segment, readyFilter, assetFilter) ? undefined : 'filtered-out'}
@@ -115,6 +115,7 @@ export default function SectionBlock({
                     liveMode={liveMode}
                     isCurrent={liveMode && segment.id === currentSegmentId}
                     onSetCurrent={onSetCurrent}
+                    isLastInSection={index === ordered.length - 1}
                   />
                 </div>
               ))}

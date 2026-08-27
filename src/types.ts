@@ -63,6 +63,7 @@ export interface Segment {
   assetUrl: string
   ready: boolean
   loop: boolean
+  linkedToNext: boolean
 }
 
 const IMAGE_EXT = /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i

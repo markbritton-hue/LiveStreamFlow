@@ -46,6 +46,7 @@ export default function SegmentRow({
   liveMode = false,
   isCurrent = false,
   onSetCurrent,
+  isLastInSection = false,
 }: {
   showId: string
   segment: Segment
@@ -55,6 +56,7 @@ export default function SegmentRow({
   liveMode?: boolean
   isCurrent?: boolean
   onSetCurrent?: (segmentId: string) => void
+  isLastInSection?: boolean
 }) {
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -167,6 +169,11 @@ export default function SegmentRow({
     }
   }, [isVideoBlock, isMusicBlock, assetUrl, videoEmbed?.kind, videoEmbed?.src])
 
+  function toggleLink() {
+    if (liveMode) return
+    updateSegment(showId, segment.id, { linkedToNext: !segment.linkedToNext })
+  }
+
   async function moveToSection(targetSectionId: string) {
     if (liveMode || targetSectionId === segment.sectionId) return
     await updateSegment(showId, segment.id, { sectionId: targetSectionId, order: Date.now() })
@@ -193,7 +200,7 @@ export default function SegmentRow({
         id={`segment-${segment.id}`}
         ref={setNodeRef}
         style={style}
-        className={`timeline-item${liveMode ? ' timeline-item-live' : ''}`}
+        className={`timeline-item${liveMode ? ' timeline-item-live' : ''}${segment.linkedToNext ? ' timeline-item-linked' : ''}`}
       >
         <div className="timeline-rail">
           {liveMode ? (
@@ -210,7 +217,17 @@ export default function SegmentRow({
               <SegmentTypeIcon type="divider" size={22} />
             </span>
           )}
-          <span className="timeline-line" />
+          {isLastInSection ? (
+            <span className="timeline-connector-spacer" />
+          ) : (
+            <button
+              type="button"
+              className={`timeline-connector${segment.linkedToNext ? ' timeline-connector-linked' : ''}`}
+              onClick={toggleLink}
+              disabled={liveMode}
+              title={segment.linkedToNext ? 'Unlink from next block' : 'Link to next block (run together)'}
+            />
+          )}
         </div>
 
         <div className={`divider-bar${isCurrent ? ' block-live-current' : ''}`}>
@@ -248,7 +265,7 @@ export default function SegmentRow({
       id={`segment-${segment.id}`}
       ref={setNodeRef}
       style={style}
-      className={`timeline-item${liveMode ? ' timeline-item-live' : ''}`}
+      className={`timeline-item${liveMode ? ' timeline-item-live' : ''}${segment.linkedToNext ? ' timeline-item-linked' : ''}`}
     >
       <div className="timeline-rail">
         {liveMode ? (
@@ -265,7 +282,17 @@ export default function SegmentRow({
             <SegmentTypeIcon type={segment.type} size={26} />
           </span>
         )}
-        <span className="timeline-line" />
+        {isLastInSection ? (
+          <span className="timeline-connector-spacer" />
+        ) : (
+          <button
+            type="button"
+            className={`timeline-connector${segment.linkedToNext ? ' timeline-connector-linked' : ''}`}
+            onClick={toggleLink}
+            disabled={liveMode}
+            title={segment.linkedToNext ? 'Unlink from next block' : 'Link to next block (run together)'}
+          />
+        )}
       </div>
 
       <div
