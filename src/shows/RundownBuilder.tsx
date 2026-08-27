@@ -169,6 +169,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
           assetUrl: '',
           ready: false,
           loop: false,
+          linkedToNext: false,
         },
         sectionSegments.length,
       )
