@@ -298,40 +298,41 @@ export default function SegmentRow({
             disabled={liveMode}
           />
 
-          <span className="block-header-thumb-slot">
-            {(isGraphicBlock || isVideoBlock) && mediaThumbnail && (
-              <div className="block-header-thumb-wrap">
-                {failedImageUrl === mediaThumbnail ? (
-                  <a
-                    href={assetUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block-header-thumb-fallback"
-                    title="Thumbnail unavailable — click to open the file"
-                  >
-                    ⚠️
-                  </a>
-                ) : (
-                  <button
-                    type="button"
-                    className="block-header-thumb-button"
-                    onClick={() => setShowImagePreview(true)}
-                    aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
-                  >
-                    <img
-                      src={mediaThumbnail}
-                      alt=""
-                      className="block-header-thumb"
-                      onError={() => setFailedImageUrl(mediaThumbnail)}
-                    />
-                    {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
-                  </button>
-                )}
-                {isVideoBlock && detectedLengthSeconds !== null && (
-                  <span className="video-length-pill">{formatVideoLength(detectedLengthSeconds)}</span>
-                )}
-              </div>
+          <span className="video-length-pill-slot">
+            {isVideoBlock && detectedLengthSeconds !== null && (
+              <span className="video-length-pill">{formatVideoLength(detectedLengthSeconds)}</span>
             )}
+          </span>
+
+          <span className="block-header-thumb-slot">
+            {(isGraphicBlock || isVideoBlock) &&
+              mediaThumbnail &&
+              (failedImageUrl === mediaThumbnail ? (
+                <a
+                  href={assetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block-header-thumb-fallback"
+                  title="Thumbnail unavailable — click to open the file"
+                >
+                  ⚠️
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="block-header-thumb-button"
+                  onClick={() => setShowImagePreview(true)}
+                  aria-label={isVideoBlock ? 'View video thumbnail' : 'View full image'}
+                >
+                  <img
+                    src={mediaThumbnail}
+                    alt=""
+                    className="block-header-thumb"
+                    onError={() => setFailedImageUrl(mediaThumbnail)}
+                  />
+                  {isVideoBlock && <span className="block-header-thumb-play">▶</span>}
+                </button>
+              ))}
           </span>
 
           <label className="ready-checkbox-label" title="Mark ready">
