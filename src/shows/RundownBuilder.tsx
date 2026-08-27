@@ -10,7 +10,7 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import { SEGMENT_TYPE_LABELS, type SegmentType, type Show } from '../types'
+import { SEGMENT_TYPE_LABELS, type Segment, type SegmentType, type Show } from '../types'
 import type { ReadyFilter, AssetFilter } from './rundownFilters'
 import { addSegment, reorderSegments, useSegments } from './useSegments'
 import { createSection, useSections } from './useSections'
@@ -24,6 +24,16 @@ import LiveModeBar from './LiveModeBar'
 interface DragData {
   source?: 'palette'
   segmentType?: SegmentType
+}
+
+function getLinkedGroupIds(ordered: Segment[], id: string): string[] {
+  const idx = ordered.findIndex((s) => s.id === id)
+  if (idx === -1) return [id]
+  let start = idx
+  while (start > 0 && ordered[start - 1].linkedToNext) start--
+  let end = idx
+  while (end < ordered.length - 1 && ordered[end].linkedToNext) end++
+  return ordered.slice(start, end + 1).map((s) => s.id)
 }
 
 export default function RundownBuilder({ show }: { show: Show }) {
@@ -184,12 +194,19 @@ export default function RundownBuilder({ show }: { show: Show }) {
     const newIndex = sectionSegments.findIndex((s) => s.id === over.id)
     if (oldIndex === -1 || newIndex === -1) return
 
-    const reordered = [...sectionSegments]
-    const [moved] = reordered.splice(oldIndex, 1)
-    reordered.splice(newIndex, 0, moved)
+    const groupIds = getLinkedGroupIds(sectionSegments, String(active.id))
+    if (groupIds.includes(String(over.id))) return
+
+    const groupSet = new Set(groupIds)
+    const groupSegments = sectionSegments.filter((s) => groupSet.has(s.id))
+    const remaining = sectionSegments.filter((s) => !groupSet.has(s.id))
+    let insertAt = remaining.findIndex((s) => s.id === over.id)
+    if (insertAt === -1) insertAt = remaining.length
+    remaining.splice(insertAt, 0, ...groupSegments)
+
     await reorderSegments(
       show.id,
-      reordered.map((s) => s.id),
+      remaining.map((s) => s.id),
     )
   }
 

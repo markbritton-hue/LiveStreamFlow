@@ -7,6 +7,20 @@ import { deleteSection, renameSection } from './useSections'
 import { matchesFilters, type AssetFilter, type ReadyFilter } from './rundownFilters'
 import SegmentRow from './SegmentRow'
 
+function groupSegments(ordered: Segment[]): Segment[][] {
+  const groups: Segment[][] = []
+  let current: Segment[] = []
+  ordered.forEach((segment) => {
+    current.push(segment)
+    if (!segment.linkedToNext) {
+      groups.push(current)
+      current = []
+    }
+  })
+  if (current.length) groups.push(current)
+  return groups
+}
+
 export default function SectionBlock({
   showId,
   section,
@@ -100,23 +114,35 @@ export default function SectionBlock({
                 !ordered.some((s) => matchesFilters(s, readyFilter, assetFilter)) && (
                   <p className="timeline-empty">No blocks match the current filters.</p>
                 )}
-              {ordered.map((segment, index) => (
+              {groupSegments(ordered).map((group) => (
                 <div
-                  key={segment.id}
-                  className={matchesFilters(segment, readyFilter, assetFilter) ? undefined : 'filtered-out'}
+                  key={group[0].id}
+                  className={group.length > 1 ? 'linked-group' : undefined}
                 >
-                  {dropBeforeId === segment.id && <div className="drop-indicator" />}
-                  <SegmentRow
-                    showId={showId}
-                    segment={segment}
-                    sections={sections}
-                    onDuplicate={() => handleDuplicate(segment)}
-                    assetsFolderUrl={assetsFolderUrl}
-                    liveMode={liveMode}
-                    isCurrent={liveMode && segment.id === currentSegmentId}
-                    onSetCurrent={onSetCurrent}
-                    isLastInSection={index === ordered.length - 1}
-                  />
+                  {group.map((segment) => {
+                    const index = ordered.indexOf(segment)
+                    return (
+                      <div
+                        key={segment.id}
+                        className={
+                          matchesFilters(segment, readyFilter, assetFilter) ? undefined : 'filtered-out'
+                        }
+                      >
+                        {dropBeforeId === segment.id && <div className="drop-indicator" />}
+                        <SegmentRow
+                          showId={showId}
+                          segment={segment}
+                          sections={sections}
+                          onDuplicate={() => handleDuplicate(segment)}
+                          assetsFolderUrl={assetsFolderUrl}
+                          liveMode={liveMode}
+                          isCurrent={liveMode && segment.id === currentSegmentId}
+                          onSetCurrent={onSetCurrent}
+                          isLastInSection={index === ordered.length - 1}
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
               ))}
               {dropBeforeId === `section-${section.id}` && ordered.length > 0 && (

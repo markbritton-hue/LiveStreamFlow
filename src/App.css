@@ -962,6 +962,17 @@
   margin-bottom: 2px;
 }
 
+.linked-group {
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  padding: 8px 8px 2px 8px;
+  margin-bottom: 14px;
+}
+
+.linked-group .timeline-item:last-child {
+  margin-bottom: 0;
+}
+
 .divider-bar {
   display: flex;
   align-items: center;
