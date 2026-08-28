@@ -83,28 +83,6 @@ export default function RundownBuilder({ show }: { show: Show }) {
     setLiveMode(false)
   }
 
-  function handlePrev() {
-    if (currentIndex <= 0 || currentGroupIds.length === 0) return
-    const groupStart = flattenedSegments.findIndex((s) => s.id === currentGroupIds[0])
-    if (groupStart <= 0) return
-    const prevSegment = flattenedSegments[groupStart - 1]
-    const prevGroupIds = getLinkedGroupIds(flattenedSegments, prevSegment.id)
-    const target = flattenedSegments.find((s) => s.id === prevGroupIds[0])
-    if (!target) return
-    persistCurrent(target.id)
-    scrollToSegment(target.id)
-  }
-
-  function handleNext() {
-    if (currentIndex === -1 || currentGroupIds.length === 0) return
-    const groupStart = flattenedSegments.findIndex((s) => s.id === currentGroupIds[0])
-    const groupEnd = groupStart + currentGroupIds.length - 1
-    if (groupEnd >= flattenedSegments.length - 1) return
-    const target = flattenedSegments[groupEnd + 1]
-    persistCurrent(target.id)
-    scrollToSegment(target.id)
-  }
-
   function scrollToSegment(segmentId?: string) {
     if (!segmentId) return
     document
@@ -241,11 +219,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
           {liveMode && (
             <LiveModeBar
               onExit={handleExitLive}
-              onPrev={handlePrev}
-              onNext={handleNext}
               onJumpToCurrent={() => scrollToSegment(currentSegmentId ?? undefined)}
-              canGoPrev={currentIndex > 0}
-              canGoNext={currentIndex !== -1 && currentIndex < flattenedSegments.length - 1}
               positionLabel={
                 currentIndex !== -1
                   ? `Block ${currentIndex + 1} of ${flattenedSegments.length}: ${flattenedSegments[currentIndex].title}`

@@ -139,6 +139,14 @@
   white-space: nowrap;
 }
 
+.live-clock {
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-h);
+}
+
 .live-mode-controls {
   display: flex;
   align-items: center;
