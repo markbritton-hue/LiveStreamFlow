@@ -298,7 +298,6 @@ export default function SegmentRow({
       <div
         className={`block status-${segment.status} type-${segment.type}${expanded ? ' block-expanded' : ' block-collapsed'}${isCurrent ? ' block-live-current' : ''}${liveMode && !isCurrent ? ' block-live-dimmed' : ''}`}
       >
-        {segment.ready && <span className="ready-badge">✓ Ready</span>}
 
         <div className="block-header">
           <span
