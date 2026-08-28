@@ -89,7 +89,7 @@ export default function SectionBlock({
           disabled={liveMode}
         />
         <span className="section-meta">
-          {ordered.length} block{ordered.length === 1 ? '' : 's'} · {sectionMinutes} min
+          {ordered.length} block{ordered.length === 1 ? '' : 's'} · {sectionMinutes.toFixed(2)} min
         </span>
         {!liveMode && (
           <button
