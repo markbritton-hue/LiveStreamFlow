@@ -1191,7 +1191,7 @@
 .video-length-pill {
   padding: 2px 5px;
   border-radius: 999px;
-  background: var(--accent);
+  background: #ff8c1a;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
