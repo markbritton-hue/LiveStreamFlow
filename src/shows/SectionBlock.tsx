@@ -95,7 +95,11 @@ export default function SectionBlock({
           <button
             type="button"
             className="delete-button"
-            onClick={() => deleteSection(showId, section.id)}
+            onClick={() => {
+              if (window.confirm(`Delete section "${title}" and all its blocks?`)) {
+                deleteSection(showId, section.id)
+              }
+            }}
             aria-label="Delete section"
           >
             ✕

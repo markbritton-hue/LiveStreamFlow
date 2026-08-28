@@ -249,7 +249,9 @@ export default function SegmentRow({
             <button
               type="button"
               className="delete-button"
-              onClick={() => deleteSegment(showId, segment.id)}
+              onClick={() => {
+                if (window.confirm('Delete this section block?')) deleteSegment(showId, segment.id)
+              }}
               aria-label="Delete section"
             >
               ✕
@@ -436,7 +438,9 @@ export default function SegmentRow({
             <button
               type="button"
               className="delete-button"
-              onClick={() => deleteSegment(showId, segment.id)}
+              onClick={() => {
+                if (window.confirm('Delete this block?')) deleteSegment(showId, segment.id)
+              }}
               aria-label="Delete segment"
             >
               ✕
