@@ -10,9 +10,15 @@ export default function OnlineUsers({ currentUserEmail }: { currentUserEmail?: s
 
   if (users.length === 0) return null
 
+  const sorted = [...users].sort((a, b) => {
+    if (a.email === currentUserEmail) return -1
+    if (b.email === currentUserEmail) return 1
+    return 0
+  })
+
   return (
     <div className="online-users">
-      {users.map((u) => (
+      {sorted.map((u) => (
         <span
           key={u.uid}
           className={`online-user-avatar${u.email === currentUserEmail ? ' online-user-self' : ''}`}

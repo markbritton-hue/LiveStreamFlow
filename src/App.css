@@ -28,6 +28,7 @@
 .online-users {
   display: flex;
   align-items: center;
+  margin-right: 8px;
 }
 
 .online-user-avatar {
@@ -50,7 +51,13 @@
 }
 
 .online-user-self {
-  background: #1fa354;
+  width: 38px;
+  height: 38px;
+  font-size: 13px;
+  background: #7c3aed;
+  border-color: #d6bcfa;
+  box-shadow: 0 0 0 2px #7c3aed;
+  z-index: 1;
 }
 
 .back-button {

@@ -23,9 +23,9 @@ function AppShell() {
       <header className="app-header">
         <div className="app-header-left">
           <img src={logo} alt="LiveStreamFlow" className="app-logo" />
-          <OnlineUsers currentUserEmail={user.email} />
         </div>
         <span className="app-user">
+          <OnlineUsers currentUserEmail={user.email} />
           <BackButton />
           <button type="button" className="link-button" onClick={() => signOut(auth)}>
             Sign out
