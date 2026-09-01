@@ -720,6 +720,17 @@
   color: var(--accent);
 }
 
+.view-only-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .show-edit-panel {
   display: flex;
   flex-direction: column;

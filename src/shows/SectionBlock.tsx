@@ -31,6 +31,7 @@ export default function SectionBlock({
   assetFilter = 'all',
   assetsFolderUrl,
   liveMode = false,
+  readOnly = false,
   currentGroupIds = [],
   onSetCurrent,
 }: {
@@ -43,15 +44,17 @@ export default function SectionBlock({
   assetFilter?: AssetFilter
   assetsFolderUrl?: string
   liveMode?: boolean
+  readOnly?: boolean
   currentGroupIds?: string[]
   onSetCurrent?: (segmentId: string) => void
 }) {
+  const locked = liveMode || readOnly
   const [collapsed, setCollapsed] = useState(false)
   const [title, setTitle] = useState(section.title)
   const { setNodeRef, isOver } = useDroppable({ id: `section-${section.id}` })
 
   function handleRename(value: string) {
-    if (liveMode) return
+    if (locked) return
     setTitle(value)
     renameSection(showId, section.id, value)
   }
@@ -60,7 +63,7 @@ export default function SectionBlock({
   const sectionMinutes = ordered.reduce((sum, s) => sum + durationToMinutes(s.duration), 0)
 
   async function handleDuplicate(segment: Segment) {
-    if (liveMode) return
+    if (locked) return
     const { id, order, ...rest } = segment
     void id
     void order
@@ -86,12 +89,12 @@ export default function SectionBlock({
           className="section-title"
           value={title}
           onChange={(e) => handleRename(e.target.value)}
-          disabled={liveMode}
+          disabled={locked}
         />
         <span className="section-meta">
           {ordered.length} block{ordered.length === 1 ? '' : 's'} · {sectionMinutes.toFixed(2)} min
         </span>
-        {!liveMode && (
+        {!locked && (
           <button
             type="button"
             className="delete-button"
@@ -140,6 +143,7 @@ export default function SectionBlock({
                           onDuplicate={() => handleDuplicate(segment)}
                           assetsFolderUrl={assetsFolderUrl}
                           liveMode={liveMode}
+                          readOnly={readOnly}
                           isCurrent={liveMode && currentGroupIds.includes(segment.id)}
                           onSetCurrent={onSetCurrent}
                           isLastInSection={index === ordered.length - 1}

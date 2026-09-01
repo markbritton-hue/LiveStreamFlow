@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider'
 import { useShow } from './useShow'
 import { updateShow } from './useShows'
 import RundownBuilder from './RundownBuilder'
@@ -18,6 +19,7 @@ function toDateTimeLocal(iso: string) {
 
 export default function ShowDetail() {
   const { showId } = useParams<{ showId: string }>()
+  const { user } = useAuth()
   const { show, loading } = useShow(showId ?? '')
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<Show | null>(null)
@@ -28,6 +30,10 @@ export default function ShowDetail() {
 
   if (loading) return <p>Loading…</p>
   if (!show) return <p>Show not found.</p>
+
+  const canEdit =
+    !!user &&
+    (show.ownerId === user.uid || (!!user.email && show.teamMembers.includes(user.email)))
 
   async function handleSave() {
     if (!draft || !showId) return
@@ -54,9 +60,13 @@ export default function ShowDetail() {
       <div className="show-detail-top">
         <div className="show-title-block">
           <h1>{show.title}</h1>
-          <button type="button" onClick={() => setEditing(true)}>
-            Edit Show
-          </button>
+          {canEdit ? (
+            <button type="button" onClick={() => setEditing(true)}>
+              Edit Show
+            </button>
+          ) : (
+            <span className="view-only-badge">View only</span>
+          )}
         </div>
 
         <ShowCountdownCard scheduledAt={show.scheduledAt} />
@@ -168,7 +178,7 @@ export default function ShowDetail() {
         </Modal>
       )}
 
-      <RundownBuilder show={show} />
+      <RundownBuilder show={show} readOnly={!canEdit} />
     </div>
   )
 }

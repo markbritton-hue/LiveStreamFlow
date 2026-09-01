@@ -44,6 +44,7 @@ export default function SegmentRow({
   onDuplicate,
   assetsFolderUrl,
   liveMode = false,
+  readOnly = false,
   isCurrent = false,
   onSetCurrent,
   isLastInSection = false,
@@ -54,14 +55,16 @@ export default function SegmentRow({
   onDuplicate?: () => void
   assetsFolderUrl?: string
   liveMode?: boolean
+  readOnly?: boolean
   isCurrent?: boolean
   onSetCurrent?: (segmentId: string) => void
   isLastInSection?: boolean
 }) {
+  const locked = liveMode || readOnly
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
-    disabled: liveMode,
+    disabled: locked,
   })
   const [expanded, setExpanded] = useState(false)
   const [showImagePreview, setShowImagePreview] = useState(false)
@@ -84,7 +87,7 @@ export default function SegmentRow({
     field: K,
     value: Segment[K],
   ) {
-    if (liveMode) return
+    if (locked) return
     setLocal(value)
     updateSegment(showId, segment.id, { [field]: value } as Partial<Segment>)
   }
@@ -170,12 +173,12 @@ export default function SegmentRow({
   }, [isVideoBlock, isMusicBlock, assetUrl, videoEmbed?.kind, videoEmbed?.src])
 
   function toggleLink() {
-    if (liveMode) return
+    if (locked) return
     updateSegment(showId, segment.id, { linkedToNext: !segment.linkedToNext })
   }
 
   async function moveToSection(targetSectionId: string) {
-    if (liveMode || targetSectionId === segment.sectionId) return
+    if (locked || targetSectionId === segment.sectionId) return
     await updateSegment(showId, segment.id, { sectionId: targetSectionId, order: Date.now() })
   }
 
@@ -224,7 +227,7 @@ export default function SegmentRow({
               type="button"
               className={`timeline-connector${segment.linkedToNext ? ' timeline-connector-linked' : ''}`}
               onClick={toggleLink}
-              disabled={liveMode}
+              disabled={locked}
               title={segment.linkedToNext ? 'Unlink from next block' : 'Link to next block (run together)'}
             />
           )}
@@ -232,7 +235,7 @@ export default function SegmentRow({
 
         <div className={`divider-bar${isCurrent ? ' block-live-current' : ''}`}>
           <span
-            className={`drag-handle${liveMode ? ' drag-handle-disabled' : ''}`}
+            className={`drag-handle${locked ? ' drag-handle-disabled' : ''}`}
             {...attributes}
             {...listeners}
           >
@@ -243,9 +246,9 @@ export default function SegmentRow({
             value={title}
             onChange={(e) => commitField(setTitle, 'title', e.target.value)}
             placeholder="Section name"
-            disabled={liveMode}
+            disabled={locked}
           />
-          {!liveMode && (
+          {!locked && (
             <button
               type="button"
               className="delete-button"
@@ -291,7 +294,7 @@ export default function SegmentRow({
             type="button"
             className={`timeline-connector${segment.linkedToNext ? ' timeline-connector-linked' : ''}`}
             onClick={toggleLink}
-            disabled={liveMode}
+            disabled={locked}
             title={segment.linkedToNext ? 'Unlink from next block' : 'Link to next block (run together)'}
           />
         )}
@@ -303,7 +306,7 @@ export default function SegmentRow({
 
         <div className="block-header">
           <span
-            className={`drag-handle${liveMode ? ' drag-handle-disabled' : ''}`}
+            className={`drag-handle${locked ? ' drag-handle-disabled' : ''}`}
             {...attributes}
             {...listeners}
           >
@@ -323,7 +326,7 @@ export default function SegmentRow({
             className="segment-title"
             value={title}
             onChange={(e) => commitField(setTitle, 'title', e.target.value)}
-            disabled={liveMode}
+            disabled={locked}
           />
 
           <select
@@ -331,7 +334,7 @@ export default function SegmentRow({
             onChange={(e) =>
               updateSegment(showId, segment.id, { type: e.target.value as SegmentType })
             }
-            disabled={liveMode}
+            disabled={locked}
           >
             {TYPES.map((t) => (
               <option key={t} value={t}>
@@ -349,7 +352,7 @@ export default function SegmentRow({
             value={duration}
             onChange={(e) => commitField(setDuration, 'duration', e.target.value)}
             title="Duration (MM:SS)"
-            disabled={liveMode}
+            disabled={locked}
           />
 
           <span className="video-length-pill-slot">
@@ -400,7 +403,7 @@ export default function SegmentRow({
           </span>
 
           <span className="ready-checkbox-label">
-            {!liveMode && (
+            {!locked && (
               <input
                 type="checkbox"
                 checked={!!segment.ready}
@@ -410,7 +413,7 @@ export default function SegmentRow({
             )}
           </span>
 
-          {!liveMode && (
+          {!locked && (
             <button
               type="button"
               className="duplicate-button"
@@ -434,7 +437,7 @@ export default function SegmentRow({
             </button>
           )}
 
-          {!liveMode && (
+          {!locked && (
             <button
               type="button"
               className="delete-button"
@@ -484,14 +487,14 @@ export default function SegmentRow({
               onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
               onDragOver={handleAssetDragOver}
               onDrop={handleAssetDrop}
-              disabled={liveMode}
+              disabled={locked}
             />
             {assetUrl && (
               <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                 Open
               </a>
             )}
-            {assetsFolderUrl && !liveMode && (
+            {assetsFolderUrl && !locked && (
               <button
                 type="button"
                 className="asset-folder-link"
@@ -530,7 +533,7 @@ export default function SegmentRow({
                 value={notes}
                 onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
                 rows={2}
-                disabled={liveMode}
+                disabled={locked}
               />
             )}
 
@@ -540,7 +543,7 @@ export default function SegmentRow({
                   type="checkbox"
                   checked={!!segment.loop}
                   onChange={(e) => updateSegment(showId, segment.id, { loop: e.target.checked })}
-                  disabled={liveMode}
+                  disabled={locked}
                 />
                 Loop video
               </label>
@@ -555,7 +558,7 @@ export default function SegmentRow({
             value={notes}
             onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
             rows={2}
-            disabled={liveMode}
+            disabled={locked}
           />
         )}
 
@@ -567,7 +570,7 @@ export default function SegmentRow({
               value={scriptCopy}
               onChange={(e) => commitField(setScriptCopy, 'scriptCopy', e.target.value)}
               rows={2}
-              disabled={liveMode}
+              disabled={locked}
             />
 
             <div className="block-body">
@@ -576,21 +579,21 @@ export default function SegmentRow({
                 placeholder="Detail (hometown, gown notes, selection, bio...)"
                 value={detail}
                 onChange={(e) => commitField(setDetail, 'detail', e.target.value)}
-                disabled={liveMode}
+                disabled={locked}
               />
               <input
                 className="segment-owner"
                 placeholder="Owner"
                 value={owner}
                 onChange={(e) => commitField(setOwner, 'owner', e.target.value)}
-                disabled={liveMode}
+                disabled={locked}
               />
               <input
                 className="segment-notes"
                 placeholder="Notes"
                 value={notes}
                 onChange={(e) => commitField(setNotes, 'notes', e.target.value)}
-                disabled={liveMode}
+                disabled={locked}
               />
             </div>
 
@@ -605,14 +608,14 @@ export default function SegmentRow({
                 onChange={(e) => commitField(setAssetUrl, 'assetUrl', e.target.value)}
                 onDragOver={handleAssetDragOver}
                 onDrop={handleAssetDrop}
-                disabled={liveMode}
+                disabled={locked}
               />
               {assetUrl && (
                 <a className="asset-open-link" href={assetUrl} target="_blank" rel="noopener noreferrer">
                   Open
                 </a>
               )}
-              {assetsFolderUrl && !liveMode && (
+              {assetsFolderUrl && !locked && (
                 <button
                   type="button"
                   className="asset-folder-link"
@@ -628,7 +631,7 @@ export default function SegmentRow({
                   value={segment.sectionId}
                   onChange={(e) => moveToSection(e.target.value)}
                   title="Move to section"
-                  disabled={liveMode}
+                  disabled={locked}
                 >
                   {sections.map((s) => (
                     <option key={s.id} value={s.id}>

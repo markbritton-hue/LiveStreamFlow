@@ -8,21 +8,29 @@ service cloud.firestore {
           || (request.auth.token.email in showData.teamMembers));
     }
 
-    function isMemberOfShow(showId) {
-      return isShowMember(get(/databases/$(database)/documents/shows/$(showId)).data);
+    function canViewShow(showData) {
+      return isShowMember(showData)
+        || (request.auth != null && (request.auth.token.email in showData.guestEmails));
+    }
+
+    function showData(showId) {
+      return get(/databases/$(database)/documents/shows/$(showId)).data;
     }
 
     match /shows/{showId} {
-      allow read, update, delete: if isShowMember(resource.data);
+      allow read: if canViewShow(resource.data);
+      allow update, delete: if isShowMember(resource.data);
       allow create: if request.auth != null
         && request.resource.data.ownerId == request.auth.uid;
 
       match /segments/{segmentId} {
-        allow read, write: if isMemberOfShow(showId);
+        allow read: if canViewShow(showData(showId));
+        allow write: if isShowMember(showData(showId));
       }
 
       match /sections/{sectionId} {
-        allow read, write: if isMemberOfShow(showId);
+        allow read: if canViewShow(showData(showId));
+        allow write: if isShowMember(showData(showId));
       }
     }
 

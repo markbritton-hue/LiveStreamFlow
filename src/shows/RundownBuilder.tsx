@@ -36,7 +36,13 @@ function getLinkedGroupIds(ordered: Segment[], id: string): string[] {
   return ordered.slice(start, end + 1).map((s) => s.id)
 }
 
-export default function RundownBuilder({ show }: { show: Show }) {
+export default function RundownBuilder({
+  show,
+  readOnly = false,
+}: {
+  show: Show
+  readOnly?: boolean
+}) {
   const { sections, loading: sectionsLoading } = useSections(show.id)
   const { segments, loading: segmentsLoading } = useSegments(show.id)
   const [creatingDefault, setCreatingDefault] = useState(false)
@@ -49,6 +55,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
     show.liveCurrentSegmentId || null,
   )
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+  const locked = liveMode || readOnly
 
   const flattenedSegments = useMemo(() => {
     const orderedSections = [...sections].sort((a, b) => a.order - b.order)
@@ -96,17 +103,17 @@ export default function RundownBuilder({ show }: { show: Show }) {
   }
 
   useEffect(() => {
-    if (sectionsLoading || creatingDefault || sections.length > 0) return
+    if (readOnly || sectionsLoading || creatingDefault || sections.length > 0) return
     setCreatingDefault(true)
     createSection(show.id, 'Part 1', 0).finally(() => setCreatingDefault(false))
-  }, [sectionsLoading, sections.length, creatingDefault, show.id])
+  }, [readOnly, sectionsLoading, sections.length, creatingDefault, show.id])
 
   async function handleAddSection() {
     await createSection(show.id, `Part ${sections.length + 1}`, sections.length)
   }
 
   function handleDragStart(event: DragStartEvent) {
-    if (liveMode) return
+    if (locked) return
     setActiveDrag((event.active.data.current as DragData) ?? null)
   }
 
@@ -122,7 +129,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
   async function handleDragEnd(event: DragEndEvent) {
     setActiveDrag(null)
     setOverId(null)
-    if (liveMode) return
+    if (locked) return
     const { active, over } = event
     if (!over) return
 
@@ -213,7 +220,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
       onDragCancel={handleDragCancel}
     >
       <div className="rundown-layout">
-        {!liveMode && <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />}
+        {!locked && <BlockPalette assetsFolderUrl={show.assetsFolderUrl} />}
 
         <div className="rundown-builder">
           {liveMode && (
@@ -233,7 +240,7 @@ export default function RundownBuilder({ show }: { show: Show }) {
             onReadyFilterChange={setReadyFilter}
             assetFilter={assetFilter}
             onAssetFilterChange={setAssetFilter}
-            onStartLive={liveMode ? undefined : handleStartLive}
+            onStartLive={locked ? undefined : handleStartLive}
           />
 
           {loading ? (
@@ -251,13 +258,14 @@ export default function RundownBuilder({ show }: { show: Show }) {
                 assetFilter={assetFilter}
                 assetsFolderUrl={show.assetsFolderUrl}
                 liveMode={liveMode}
+                readOnly={readOnly}
                 currentGroupIds={currentGroupIds}
                 onSetCurrent={handleSetCurrent}
               />
             ))
           )}
 
-          {!liveMode && (
+          {!locked && (
             <button type="button" className="new-section-button" onClick={handleAddSection}>
               + Add Section
             </button>
