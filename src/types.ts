@@ -4,6 +4,7 @@ export interface Show {
   scheduledAt: string // ISO datetime
   targetDurationMinutes: number
   status: 'planned' | 'live' | 'completed'
+  ownerId: string
   createdBy: string
   createdAt: string // ISO datetime
   location: string

@@ -8,21 +8,32 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 import type { Show } from '../types'
 
-export function useShows() {
+export function useShows(ownerId: string | undefined) {
   const [shows, setShows] = useState<Show[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const q = query(collection(db, 'shows'), orderBy('scheduledAt', 'asc'))
+    if (!ownerId) {
+      setShows([])
+      setLoading(false)
+      return
+    }
+    const q = query(
+      collection(db, 'shows'),
+      where('ownerId', '==', ownerId),
+      orderBy('scheduledAt', 'asc'),
+    )
     return onSnapshot(q, (snap) => {
       setShows(
         snap.docs.map(
           (d) =>
             ({
+              ownerId: '',
               location: '',
               notes: '',
               teamMembers: [],
@@ -36,7 +47,7 @@ export function useShows() {
       )
       setLoading(false)
     })
-  }, [])
+  }, [ownerId])
 
   return { shows, loading }
 }
@@ -45,6 +56,7 @@ export async function createShow(input: {
   title: string
   scheduledAt: string
   targetDurationMinutes: number
+  ownerId: string
   createdBy: string
 }) {
   await addDoc(collection(db, 'shows'), {
@@ -56,6 +68,7 @@ export async function createShow(input: {
     teamMembers: [],
     guestEmails: [],
     assetsFolderUrl: '',
+    liveCurrentSegmentId: '',
   })
 }
 

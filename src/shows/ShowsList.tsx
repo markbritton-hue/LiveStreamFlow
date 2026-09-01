@@ -5,8 +5,8 @@ import { createShow, useShows } from './useShows'
 import Modal from '../components/Modal'
 
 export default function ShowsList() {
-  const { shows, loading } = useShows()
   const { user } = useAuth()
+  const { shows, loading } = useShows(user?.uid)
   const [showModal, setShowModal] = useState(false)
   const [title, setTitle] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')
@@ -19,6 +19,7 @@ export default function ShowsList() {
       title,
       scheduledAt,
       targetDurationMinutes,
+      ownerId: user.uid,
       createdBy: user.email ?? user.uid,
     })
     setTitle('')
