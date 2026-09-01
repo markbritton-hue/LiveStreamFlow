@@ -6,6 +6,7 @@ import RundownBuilder from './RundownBuilder'
 import EmailListInput from './EmailListInput'
 import InviteTeamMember from './InviteTeamMember'
 import ShowCountdownCard from './ShowCountdownCard'
+import Modal from '../components/Modal'
 import type { Show } from '../types'
 
 function toDateTimeLocal(iso: string) {
@@ -50,21 +51,19 @@ export default function ShowDetail() {
 
   return (
     <div className="show-detail">
-      {!editing ? (
-        <>
-          <div className="show-detail-top">
-            <div className="show-title-block">
-              <h1>{show.title}</h1>
-              <button type="button" onClick={() => setEditing(true)}>
-                Edit Show
-              </button>
-            </div>
+      <div className="show-detail-top">
+        <div className="show-title-block">
+          <h1>{show.title}</h1>
+          <button type="button" onClick={() => setEditing(true)}>
+            Edit Show
+          </button>
+        </div>
 
-            <ShowCountdownCard scheduledAt={show.scheduledAt} />
-          </div>
-        </>
-      ) : (
-        draft && (
+        <ShowCountdownCard scheduledAt={show.scheduledAt} />
+      </div>
+
+      {editing && draft && (
+        <Modal title="Edit Show" onClose={handleCancel} size="large">
           <div className="show-edit-panel">
             <label>
               Title
@@ -166,7 +165,7 @@ export default function ShowDetail() {
               </button>
             </div>
           </div>
-        )
+        </Modal>
       )}
 
       <RundownBuilder show={show} />
