@@ -4,6 +4,7 @@ import { useShow } from './useShow'
 import { updateShow } from './useShows'
 import RundownBuilder from './RundownBuilder'
 import EmailListInput from './EmailListInput'
+import InviteTeamMember from './InviteTeamMember'
 import ShowCountdownCard from './ShowCountdownCard'
 import type { Show } from '../types'
 
@@ -133,6 +134,17 @@ export default function ShowDetail() {
                 emails={draft.teamMembers}
                 onChange={(teamMembers) => setDraft({ ...draft, teamMembers })}
                 placeholder="Add team member email + Enter"
+              />
+              <span className="field-hint">
+                Add an email here if they already have a login. If they don't, use "Create login
+                for a new team member" below to set one up for them.
+              </span>
+              <InviteTeamMember
+                onInvited={(email) => {
+                  if (!draft.teamMembers.includes(email)) {
+                    setDraft({ ...draft, teamMembers: [...draft.teamMembers, email] })
+                  }
+                }}
               />
             </label>
 

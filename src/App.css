@@ -749,6 +749,30 @@
   color: var(--text);
 }
 
+.invite-team-member-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+}
+
+.invite-team-member-form input {
+  font-weight: 400;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.invite-team-member-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .show-edit-actions {
   display: flex;
   gap: 12px;
