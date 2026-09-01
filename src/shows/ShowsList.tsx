@@ -6,7 +6,7 @@ import Modal from '../components/Modal'
 
 export default function ShowsList() {
   const { user } = useAuth()
-  const { shows, loading } = useShows(user?.uid)
+  const { shows, loading } = useShows(user?.uid, user?.email)
   const [showModal, setShowModal] = useState(false)
   const [title, setTitle] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')

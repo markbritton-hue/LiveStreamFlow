@@ -4,7 +4,6 @@ import {
   collection,
   doc,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   updateDoc,
@@ -13,51 +12,73 @@ import {
 import { db } from '../firebase'
 import type { Show } from '../types'
 
-export function useShows(ownerId: string | undefined) {
-  const [shows, setShows] = useState<Show[]>([])
-  const [loading, setLoading] = useState(true)
+function toShow(d: { id: string; data: () => unknown }): Show {
+  return {
+    ownerId: '',
+    location: '',
+    notes: '',
+    teamMembers: [],
+    guestEmails: [],
+    assetsFolderUrl: '',
+    liveCurrentSegmentId: '',
+    ...(d.data() as Partial<Show>),
+    id: d.id,
+  } as Show
+}
+
+export function useShows(ownerId: string | undefined, email: string | null | undefined) {
+  const [ownedShows, setOwnedShows] = useState<Show[]>([])
+  const [memberShows, setMemberShows] = useState<Show[]>([])
+  const [ownedLoaded, setOwnedLoaded] = useState(false)
+  const [memberLoaded, setMemberLoaded] = useState(false)
 
   useEffect(() => {
     if (!ownerId) {
-      setShows([])
-      setLoading(false)
+      setOwnedShows([])
+      setOwnedLoaded(true)
       return
     }
-    const q = query(
-      collection(db, 'shows'),
-      where('ownerId', '==', ownerId),
-      orderBy('scheduledAt', 'asc'),
-    )
+    const q = query(collection(db, 'shows'), where('ownerId', '==', ownerId))
     return onSnapshot(
       q,
       (snap) => {
-        setShows(
-          snap.docs.map(
-            (d) =>
-              ({
-                ownerId: '',
-                location: '',
-                notes: '',
-                teamMembers: [],
-                guestEmails: [],
-                assetsFolderUrl: '',
-                liveCurrentSegmentId: '',
-                ...(d.data() as Partial<Show>),
-                id: d.id,
-              }) as Show,
-          ),
-        )
-        setLoading(false)
+        setOwnedShows(snap.docs.map(toShow))
+        setOwnedLoaded(true)
       },
       (err) => {
-        console.error('useShows snapshot error:', err)
-        setShows([])
-        setLoading(false)
+        console.error('useShows owned snapshot error:', err)
+        setOwnedShows([])
+        setOwnedLoaded(true)
       },
     )
   }, [ownerId])
 
-  return { shows, loading }
+  useEffect(() => {
+    if (!email) {
+      setMemberShows([])
+      setMemberLoaded(true)
+      return
+    }
+    const q = query(collection(db, 'shows'), where('teamMembers', 'array-contains', email))
+    return onSnapshot(
+      q,
+      (snap) => {
+        setMemberShows(snap.docs.map(toShow))
+        setMemberLoaded(true)
+      },
+      (err) => {
+        console.error('useShows member snapshot error:', err)
+        setMemberShows([])
+        setMemberLoaded(true)
+      },
+    )
+  }, [email])
+
+  const shows = [...ownedShows, ...memberShows.filter((s) => s.ownerId !== ownerId)].sort(
+    (a, b) => a.scheduledAt.localeCompare(b.scheduledAt),
+  )
+
+  return { shows, loading: !ownedLoaded || !memberLoaded }
 }
 
 export async function createShow(input: {

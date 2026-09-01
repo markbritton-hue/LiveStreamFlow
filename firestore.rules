@@ -2,23 +2,27 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isOwner(showId) {
+    function isShowMember(showData) {
       return request.auth != null
-        && get(/databases/$(database)/documents/shows/$(showId)).data.ownerId == request.auth.uid;
+        && (showData.ownerId == request.auth.uid
+          || (request.auth.token.email in showData.teamMembers));
+    }
+
+    function isMemberOfShow(showId) {
+      return isShowMember(get(/databases/$(database)/documents/shows/$(showId)).data);
     }
 
     match /shows/{showId} {
-      allow read, update, delete: if request.auth != null
-        && resource.data.ownerId == request.auth.uid;
+      allow read, update, delete: if isShowMember(resource.data);
       allow create: if request.auth != null
         && request.resource.data.ownerId == request.auth.uid;
 
       match /segments/{segmentId} {
-        allow read, write: if isOwner(showId);
+        allow read, write: if isMemberOfShow(showId);
       }
 
       match /sections/{sectionId} {
-        allow read, write: if isOwner(showId);
+        allow read, write: if isMemberOfShow(showId);
       }
     }
 
