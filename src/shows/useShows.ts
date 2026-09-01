@@ -28,25 +28,33 @@ export function useShows(ownerId: string | undefined) {
       where('ownerId', '==', ownerId),
       orderBy('scheduledAt', 'asc'),
     )
-    return onSnapshot(q, (snap) => {
-      setShows(
-        snap.docs.map(
-          (d) =>
-            ({
-              ownerId: '',
-              location: '',
-              notes: '',
-              teamMembers: [],
-              guestEmails: [],
-              assetsFolderUrl: '',
-              liveCurrentSegmentId: '',
-              ...(d.data() as Partial<Show>),
-              id: d.id,
-            }) as Show,
-        ),
-      )
-      setLoading(false)
-    })
+    return onSnapshot(
+      q,
+      (snap) => {
+        setShows(
+          snap.docs.map(
+            (d) =>
+              ({
+                ownerId: '',
+                location: '',
+                notes: '',
+                teamMembers: [],
+                guestEmails: [],
+                assetsFolderUrl: '',
+                liveCurrentSegmentId: '',
+                ...(d.data() as Partial<Show>),
+                id: d.id,
+              }) as Show,
+          ),
+        )
+        setLoading(false)
+      },
+      (err) => {
+        console.error('useShows snapshot error:', err)
+        setShows([])
+        setLoading(false)
+      },
+    )
   }, [ownerId])
 
   return { shows, loading }

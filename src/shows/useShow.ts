@@ -8,7 +8,9 @@ export function useShow(showId: string) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    return onSnapshot(doc(db, 'shows', showId), (snap) => {
+    return onSnapshot(
+      doc(db, 'shows', showId),
+      (snap) => {
       setShow(
         snap.exists()
           ? ({
@@ -25,7 +27,13 @@ export function useShow(showId: string) {
           : null,
       )
       setLoading(false)
-    })
+      },
+      (err) => {
+        console.error('useShow snapshot error:', err)
+        setShow(null)
+        setLoading(false)
+      },
+    )
   }, [showId])
 
   return { show, loading }
