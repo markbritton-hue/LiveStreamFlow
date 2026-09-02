@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { Show } from '../types'
+import { formatShowRange, type Show } from '../types'
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -15,13 +15,24 @@ export default function ShowsCalendar({ shows }: { shows: Show[] }) {
 
   const showsByDay = useMemo(() => {
     const map = new Map<string, Show[]>()
-    for (const show of shows) {
-      const d = new Date(show.scheduledAt)
-      if (Number.isNaN(d.getTime())) continue
-      const key = ymd(d)
+    const add = (key: string, show: Show) => {
       const list = map.get(key)
       if (list) list.push(show)
       else map.set(key, [show])
+    }
+    for (const show of shows) {
+      const start = new Date(show.scheduledAt)
+      if (Number.isNaN(start.getTime())) continue
+      const end = show.endsAt ? new Date(show.endsAt) : start
+      const cursorDay = new Date(start.getFullYear(), start.getMonth(), start.getDate())
+      const lastDay = Number.isNaN(end.getTime())
+        ? cursorDay
+        : new Date(end.getFullYear(), end.getMonth(), end.getDate())
+      // Cap the span so a bad date can't loop forever.
+      for (let i = 0; i < 366 && cursorDay <= lastDay; i++) {
+        add(ymd(cursorDay), show)
+        cursorDay.setDate(cursorDay.getDate() + 1)
+      }
     }
     for (const list of map.values()) {
       list.sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
@@ -95,10 +106,7 @@ export default function ShowsCalendar({ shows }: { shows: Show[] }) {
                   type="button"
                   className={`shows-calendar-event status-${show.status}`}
                   onClick={() => navigate(`/shows/${show.id}`)}
-                  title={`${show.title} — ${new Date(show.scheduledAt).toLocaleString(undefined, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })}`}
+                  title={`${show.title} — ${formatShowRange(show.scheduledAt, show.endsAt)}`}
                 >
                   {show.title}
                 </button>

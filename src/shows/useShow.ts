@@ -15,6 +15,7 @@ export function useShow(showId: string) {
         snap.exists()
           ? ({
               ownerId: '',
+              endsAt: '',
               location: '',
               notes: '',
               teamMembers: [],

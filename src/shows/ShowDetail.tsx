@@ -40,6 +40,7 @@ export default function ShowDetail() {
     await updateShow(showId, {
       title: draft.title,
       scheduledAt: draft.scheduledAt,
+      endsAt: draft.endsAt,
       targetDurationMinutes: draft.targetDurationMinutes,
       location: draft.location,
       notes: draft.notes,
@@ -69,7 +70,7 @@ export default function ShowDetail() {
           )}
         </div>
 
-        <ShowCountdownCard scheduledAt={show.scheduledAt} />
+        <ShowCountdownCard scheduledAt={show.scheduledAt} endsAt={show.endsAt} />
       </div>
 
       {editing && draft && (
@@ -84,12 +85,24 @@ export default function ShowDetail() {
             </label>
 
             <label>
-              Date &amp; time
+              Start date &amp; time
               <input
                 type="datetime-local"
                 value={toDateTimeLocal(draft.scheduledAt)}
                 onChange={(e) => setDraft({ ...draft, scheduledAt: e.target.value })}
               />
+            </label>
+
+            <label>
+              End date &amp; time
+              <input
+                type="datetime-local"
+                value={toDateTimeLocal(draft.endsAt)}
+                onChange={(e) => setDraft({ ...draft, endsAt: e.target.value })}
+              />
+              {draft.endsAt && draft.endsAt < draft.scheduledAt && (
+                <span className="field-hint error">End is before the start.</span>
+              )}
             </label>
 
             <label>

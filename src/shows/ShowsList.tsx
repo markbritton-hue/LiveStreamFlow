@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { createShow, useShows } from './useShows'
+import { formatShowRange } from '../types'
 import Modal from '../components/Modal'
 import ShowsCalendar from './ShowsCalendar'
 
@@ -11,20 +12,25 @@ export default function ShowsList() {
   const [showModal, setShowModal] = useState(false)
   const [title, setTitle] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')
+  const [endsAt, setEndsAt] = useState('')
   const [targetDurationMinutes, setTargetDurationMinutes] = useState(60)
+
+  const endBeforeStart = !!endsAt && !!scheduledAt && endsAt < scheduledAt
 
   async function handleCreate(e: FormEvent) {
     e.preventDefault()
-    if (!title || !scheduledAt || !user) return
+    if (!title || !scheduledAt || !user || endBeforeStart) return
     await createShow({
       title,
       scheduledAt,
+      endsAt,
       targetDurationMinutes,
       ownerId: user.uid,
       createdBy: user.email ?? user.uid,
     })
     setTitle('')
     setScheduledAt('')
+    setEndsAt('')
     setTargetDurationMinutes(60)
     setShowModal(false)
   }
@@ -52,13 +58,25 @@ export default function ShowsList() {
               />
             </label>
             <label>
-              Date &amp; time
+              Start date &amp; time
               <input
                 type="datetime-local"
                 value={scheduledAt}
                 onChange={(e) => setScheduledAt(e.target.value)}
                 required
               />
+            </label>
+            <label>
+              End date &amp; time
+              <input
+                type="datetime-local"
+                value={endsAt}
+                min={scheduledAt || undefined}
+                onChange={(e) => setEndsAt(e.target.value)}
+              />
+              {endBeforeStart && (
+                <span className="field-hint error">End must be after the start.</span>
+              )}
             </label>
             <label>
               Target duration (minutes)
@@ -70,7 +88,9 @@ export default function ShowsList() {
               />
             </label>
             <div className="modal-actions">
-              <button type="submit">Create Show</button>
+              <button type="submit" disabled={endBeforeStart}>
+                Create Show
+              </button>
               <button type="button" className="link-button" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
@@ -99,10 +119,7 @@ export default function ShowsList() {
 
                 <div className="show-card-row">
                   <span className="show-card-icon">📅</span>
-                  {new Date(show.scheduledAt).toLocaleString(undefined, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })}
+                  {formatShowRange(show.scheduledAt, show.endsAt)}
                 </div>
 
                 <div className="show-card-row">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { formatShowRange } from '../types'
 
 function formatCountdown(scheduledAt: string): { label: string; isPast: boolean } {
   const target = new Date(scheduledAt).getTime()
@@ -26,7 +27,13 @@ function formatCountdown(scheduledAt: string): { label: string; isPast: boolean 
   return { label: parts.join(' '), isPast }
 }
 
-export default function ShowCountdownCard({ scheduledAt }: { scheduledAt: string }) {
+export default function ShowCountdownCard({
+  scheduledAt,
+  endsAt,
+}: {
+  scheduledAt: string
+  endsAt?: string
+}) {
   const [now, setNow] = useState(() => Date.now())
 
   useEffect(() => {
@@ -41,10 +48,7 @@ export default function ShowCountdownCard({ scheduledAt }: { scheduledAt: string
     <div className="show-date-card">
       <div className="show-card-row">
         <span className="show-card-icon">📅</span>
-        {new Date(scheduledAt).toLocaleString(undefined, {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        })}
+        {formatShowRange(scheduledAt, endsAt)}
       </div>
       <div className={`show-countdown${isPast ? ' show-countdown-past' : ''}`}>
         {isPast ? `Started ${label} ago` : `Starts in ${label}`}

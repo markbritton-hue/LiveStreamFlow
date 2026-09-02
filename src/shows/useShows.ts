@@ -15,6 +15,7 @@ import type { Show } from '../types'
 function toShow(d: { id: string; data: () => unknown }): Show {
   return {
     ownerId: '',
+    endsAt: '',
     location: '',
     notes: '',
     teamMembers: [],
@@ -103,6 +104,7 @@ export function useShows(ownerId: string | undefined, email: string | null | und
 export async function createShow(input: {
   title: string
   scheduledAt: string
+  endsAt: string
   targetDurationMinutes: number
   ownerId: string
   createdBy: string

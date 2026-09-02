@@ -918,6 +918,10 @@
   color: var(--text);
 }
 
+.field-hint.error {
+  color: #ff4d4d;
+}
+
 .invite-team-member-form {
   display: flex;
   flex-direction: column;

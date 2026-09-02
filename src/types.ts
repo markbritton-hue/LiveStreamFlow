@@ -1,7 +1,8 @@
 export interface Show {
   id: string
   title: string
-  scheduledAt: string // ISO datetime
+  scheduledAt: string // ISO datetime — start
+  endsAt: string // ISO datetime — end (may be empty)
   targetDurationMinutes: number
   status: 'planned' | 'live' | 'completed'
   ownerId: string
@@ -152,6 +153,23 @@ export function getImageDisplayUrl(url: string): string {
   }
 
   return url
+}
+
+export function formatShowRange(startIso: string, endIso: string | undefined): string {
+  const start = new Date(startIso)
+  if (Number.isNaN(start.getTime())) return ''
+  const startStr = start.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+
+  if (!endIso) return startStr
+  const end = new Date(endIso)
+  if (Number.isNaN(end.getTime())) return startStr
+
+  const sameDay = start.toDateString() === end.toDateString()
+  const endStr = end.toLocaleString(
+    undefined,
+    sameDay ? { timeStyle: 'short' } : { dateStyle: 'medium', timeStyle: 'short' },
+  )
+  return `${startStr} – ${endStr}`
 }
 
 export function durationToMinutes(duration: string | undefined): number {
