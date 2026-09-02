@@ -478,31 +478,34 @@
   background: var(--accent-hover);
 }
 
-.shows-list-header-actions {
+.shows-split {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.shows-list-pane {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
-.view-toggle {
-  display: inline-flex;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
+.shows-calendar-pane {
+  min-width: 0;
 }
 
-.view-toggle button {
-  padding: 7px 14px;
-  border: none;
-  background: var(--bg);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.view-toggle button.view-toggle-active {
-  background: var(--accent);
-  color: #fff;
+@media (max-width: 860px) {
+  .shows-split {
+    grid-template-columns: 1fr;
+  }
+  .shows-list-pane {
+    max-height: none;
+    overflow: visible;
+  }
 }
 
 .shows-calendar-toolbar {
