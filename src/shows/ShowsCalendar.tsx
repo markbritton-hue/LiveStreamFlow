@@ -95,17 +95,11 @@ export default function ShowsCalendar({ shows }: { shows: Show[] }) {
                   type="button"
                   className={`shows-calendar-event status-${show.status}`}
                   onClick={() => navigate(`/shows/${show.id}`)}
-                  title={`${show.title} — ${new Date(show.scheduledAt).toLocaleTimeString(undefined, {
-                    hour: 'numeric',
-                    minute: '2-digit',
+                  title={`${show.title} — ${new Date(show.scheduledAt).toLocaleString(undefined, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
                   })}`}
                 >
-                  <span className="shows-calendar-event-time">
-                    {new Date(show.scheduledAt).toLocaleTimeString(undefined, {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                    })}
-                  </span>{' '}
                   {show.title}
                 </button>
               ))}
