@@ -22,6 +22,7 @@ export function useShow(showId: string) {
               guestEmails: [],
               assetsFolderUrl: '',
               liveCurrentSegmentId: '',
+              roles: [],
               ...(snap.data() as Partial<Show>),
               id: snap.id,
             } as Show)

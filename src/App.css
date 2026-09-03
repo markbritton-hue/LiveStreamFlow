@@ -922,6 +922,71 @@
   color: #ff4d4d;
 }
 
+.roles-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 400;
+}
+
+.roles-editor-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.roles-editor-role,
+.roles-editor-name {
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.roles-editor-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.roles-panel {
+  margin: 12px 0 20px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.roles-panel h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.roles-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 16px;
+}
+
+.roles-panel-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.roles-panel-role {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.roles-panel-name {
+  color: var(--text-h);
+  text-align: right;
+}
+
 .invite-team-member-form {
   display: flex;
   flex-direction: column;

@@ -14,6 +14,30 @@ export interface Show {
   guestEmails: string[]
   assetsFolderUrl: string
   liveCurrentSegmentId: string
+  roles: ShowRole[]
+}
+
+export interface ShowRole {
+  id: string
+  role: string
+  name: string
+}
+
+export const DEFAULT_SHOW_ROLE_LABELS = [
+  'Producer',
+  'Switcher',
+  'Camera',
+  'Camera',
+  'Host',
+  'Audio',
+  'Lights',
+  'FX',
+  'Editor',
+  'Director',
+]
+
+export function makeDefaultShowRoles(): ShowRole[] {
+  return DEFAULT_SHOW_ROLE_LABELS.map((role) => ({ id: crypto.randomUUID(), role, name: '' }))
 }
 
 export type SegmentType =

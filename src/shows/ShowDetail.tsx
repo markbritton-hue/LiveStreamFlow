@@ -6,6 +6,7 @@ import { updateShow } from './useShows'
 import RundownBuilder from './RundownBuilder'
 import EmailListInput from './EmailListInput'
 import InviteTeamMember from './InviteTeamMember'
+import RolesEditor from './RolesEditor'
 import ShowCountdownCard from './ShowCountdownCard'
 import Modal from '../components/Modal'
 import type { Show } from '../types'
@@ -47,6 +48,7 @@ export default function ShowDetail() {
       teamMembers: draft.teamMembers,
       guestEmails: draft.guestEmails,
       assetsFolderUrl: draft.assetsFolderUrl,
+      roles: draft.roles,
     })
     setEditing(false)
   }
@@ -179,6 +181,14 @@ export default function ShowDetail() {
               />
             </label>
 
+            <label>
+              Roles
+              <RolesEditor
+                roles={draft.roles}
+                onChange={(roles) => setDraft({ ...draft, roles })}
+              />
+            </label>
+
             <div className="show-edit-actions">
               <button type="button" onClick={handleSave}>
                 Save
@@ -189,6 +199,20 @@ export default function ShowDetail() {
             </div>
           </div>
         </Modal>
+      )}
+
+      {show.roles.length > 0 && (
+        <div className="roles-panel">
+          <h2>Roles</h2>
+          <div className="roles-panel-grid">
+            {show.roles.map((r) => (
+              <div key={r.id} className="roles-panel-item">
+                <span className="roles-panel-role">{r.role || '—'}</span>
+                <span className="roles-panel-name">{r.name || '—'}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       <RundownBuilder show={show} readOnly={!canEdit} />

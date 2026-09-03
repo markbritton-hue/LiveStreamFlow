@@ -10,7 +10,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase'
-import type { Show } from '../types'
+import { makeDefaultShowRoles, type Show } from '../types'
 
 function toShow(d: { id: string; data: () => unknown }): Show {
   return {
@@ -22,6 +22,7 @@ function toShow(d: { id: string; data: () => unknown }): Show {
     guestEmails: [],
     assetsFolderUrl: '',
     liveCurrentSegmentId: '',
+    roles: [],
     ...(d.data() as Partial<Show>),
     id: d.id,
   } as Show
@@ -119,6 +120,7 @@ export async function createShow(input: {
     guestEmails: [],
     assetsFolderUrl: '',
     liveCurrentSegmentId: '',
+    roles: makeDefaultShowRoles(),
   })
 }
 
