@@ -13,6 +13,7 @@ import {
   type Section,
   type Segment,
   type SegmentType,
+  type ShowRole,
 } from '../types'
 import { deleteSegment, updateSegment } from './useSegments'
 import { fetchDriveVideoDurationSeconds } from './driveApi'
@@ -41,6 +42,7 @@ export default function SegmentRow({
   showId,
   segment,
   sections,
+  roles = [],
   onDuplicate,
   assetsFolderUrl,
   liveMode = false,
@@ -52,6 +54,7 @@ export default function SegmentRow({
   showId: string
   segment: Segment
   sections: Section[]
+  roles?: ShowRole[]
   onDuplicate?: () => void
   assetsFolderUrl?: string
   liveMode?: boolean
@@ -61,6 +64,7 @@ export default function SegmentRow({
   isLastInSection?: boolean
 }) {
   const locked = liveMode || readOnly
+  const assignedRole = roles.find((r) => r.id === segment.roleId) ?? null
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: segment.id,
@@ -329,6 +333,13 @@ export default function SegmentRow({
             disabled={locked}
           />
 
+          {assignedRole && (
+            <span className="segment-role-badge" title={`${assignedRole.role}${assignedRole.name ? ` — ${assignedRole.name}` : ''}`}>
+              {assignedRole.role}
+              {assignedRole.name && <strong>{assignedRole.name}</strong>}
+            </span>
+          )}
+
           <select
             value={segment.type}
             onChange={(e) =>
@@ -450,6 +461,28 @@ export default function SegmentRow({
             </button>
           )}
         </div>
+
+        {expanded && roles.length > 0 && (
+          <div className="block-role-row">
+            <label>
+              Role
+              <select
+                className="segment-role-select"
+                value={segment.roleId ?? ''}
+                onChange={(e) => updateSegment(showId, segment.id, { roleId: e.target.value })}
+                disabled={locked}
+              >
+                <option value="">— Unassigned —</option>
+                {roles.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.role}
+                    {r.name ? ` — ${r.name}` : ''}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
 
         {!expanded && !isMediaBlock && !isNotesOnlyBlock && (scriptCopy || detail) && (
           <button type="button" className="block-collapsed-preview" onClick={() => setExpanded(true)}>

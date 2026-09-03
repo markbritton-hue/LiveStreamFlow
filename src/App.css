@@ -1563,6 +1563,47 @@
   margin-bottom: 6px;
 }
 
+.block-role-row {
+  margin-bottom: 6px;
+}
+
+.block-role-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.segment-role-select {
+  flex: 1;
+  max-width: 280px;
+}
+
+.segment-role-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.segment-role-badge strong {
+  color: var(--text-h);
+  font-weight: 700;
+}
+
 .block-asset {
   display: flex;
   align-items: center;

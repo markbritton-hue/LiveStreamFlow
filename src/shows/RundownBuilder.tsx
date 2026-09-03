@@ -164,6 +164,7 @@ export default function RundownBuilder({
           notes: '',
           status: 'not-started',
           assetUrl: '',
+          roleId: '',
           ready: false,
           loop: false,
           linkedToNext: false,
@@ -253,6 +254,7 @@ export default function RundownBuilder({
                 section={section}
                 sections={sections}
                 segments={segments.filter((s) => s.sectionId === section.id)}
+                roles={show.roles}
                 dropBeforeId={activeDrag?.source === 'palette' ? overId : null}
                 readyFilter={readyFilter}
                 assetFilter={assetFilter}

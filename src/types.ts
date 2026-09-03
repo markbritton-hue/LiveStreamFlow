@@ -87,6 +87,7 @@ export interface Segment {
   notes: string
   status: SegmentStatus
   assetUrl: string
+  roleId: string
   ready: boolean
   loop: boolean
   linkedToNext: boolean

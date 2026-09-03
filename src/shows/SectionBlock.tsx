@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { durationToMinutes, type Section, type Segment } from '../types'
+import { durationToMinutes, type Section, type Segment, type ShowRole } from '../types'
 import { addSegment, reorderSegments } from './useSegments'
 import { deleteSection, renameSection } from './useSections'
 import { matchesFilters, type AssetFilter, type ReadyFilter } from './rundownFilters'
@@ -26,6 +26,7 @@ export default function SectionBlock({
   section,
   sections,
   segments,
+  roles = [],
   dropBeforeId,
   readyFilter = 'all',
   assetFilter = 'all',
@@ -39,6 +40,7 @@ export default function SectionBlock({
   section: Section
   sections: Section[]
   segments: Segment[]
+  roles?: ShowRole[]
   dropBeforeId?: string | null
   readyFilter?: ReadyFilter
   assetFilter?: AssetFilter
@@ -140,6 +142,7 @@ export default function SectionBlock({
                           showId={showId}
                           segment={segment}
                           sections={sections}
+                          roles={roles}
                           onDuplicate={() => handleDuplicate(segment)}
                           assetsFolderUrl={assetsFolderUrl}
                           liveMode={liveMode}
