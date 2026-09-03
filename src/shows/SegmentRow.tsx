@@ -333,13 +333,6 @@ export default function SegmentRow({
             disabled={locked}
           />
 
-          {assignedRole && (
-            <span className="segment-role-badge" title={`${assignedRole.role}${assignedRole.name ? ` — ${assignedRole.name}` : ''}`}>
-              {assignedRole.role}
-              {assignedRole.name && <strong>{assignedRole.name}</strong>}
-            </span>
-          )}
-
           <select
             value={segment.type}
             onChange={(e) =>
@@ -461,6 +454,16 @@ export default function SegmentRow({
             </button>
           )}
         </div>
+
+        {assignedRole && (
+          <div
+            className="segment-role-badge"
+            title={`${assignedRole.role}${assignedRole.name ? ` — ${assignedRole.name}` : ''}`}
+          >
+            {assignedRole.role}
+            {assignedRole.name && <strong>{assignedRole.name}</strong>}
+          </div>
+        )}
 
         {expanded && roles.length > 0 && (
           <div className="block-role-row">
