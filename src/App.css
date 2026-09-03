@@ -1563,6 +1563,10 @@
   margin-bottom: 6px;
 }
 
+.block-body-notes-only {
+  grid-template-columns: 1fr;
+}
+
 .block-role-row {
   margin-bottom: 6px;
 }

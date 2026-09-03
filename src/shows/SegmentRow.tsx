@@ -103,6 +103,7 @@ export default function SegmentRow({
   }
 
   const assetType = detectAssetType(assetUrl)
+  const isHostBlock = segment.type === 'host-script'
   const isVideoBlock = segment.type === 'video'
   const isGraphicBlock = segment.type === 'graphic'
   const isMusicBlock = segment.type === 'music'
@@ -609,21 +610,25 @@ export default function SegmentRow({
               disabled={locked}
             />
 
-            <div className="block-body">
-              <input
-                className="segment-detail"
-                placeholder="Detail (hometown, gown notes, selection, bio...)"
-                value={detail}
-                onChange={(e) => commitField(setDetail, 'detail', e.target.value)}
-                disabled={locked}
-              />
-              <input
-                className="segment-owner"
-                placeholder="Owner"
-                value={owner}
-                onChange={(e) => commitField(setOwner, 'owner', e.target.value)}
-                disabled={locked}
-              />
+            <div className={`block-body${isHostBlock ? ' block-body-notes-only' : ''}`}>
+              {!isHostBlock && (
+                <input
+                  className="segment-detail"
+                  placeholder="Detail (hometown, gown notes, selection, bio...)"
+                  value={detail}
+                  onChange={(e) => commitField(setDetail, 'detail', e.target.value)}
+                  disabled={locked}
+                />
+              )}
+              {!isHostBlock && (
+                <input
+                  className="segment-owner"
+                  placeholder="Owner"
+                  value={owner}
+                  onChange={(e) => commitField(setOwner, 'owner', e.target.value)}
+                  disabled={locked}
+                />
+              )}
               <input
                 className="segment-notes"
                 placeholder="Notes"
