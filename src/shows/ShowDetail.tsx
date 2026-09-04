@@ -24,6 +24,7 @@ export default function ShowDetail() {
   const { show, loading } = useShow(showId ?? '')
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<Show | null>(null)
+  const [showingRoles, setShowingRoles] = useState(false)
 
   useEffect(() => {
     if (show && !editing) setDraft(show)
@@ -74,6 +75,12 @@ export default function ShowDetail() {
 
         <ShowCountdownCard scheduledAt={show.scheduledAt} endsAt={show.endsAt} />
       </div>
+
+      {show.roles.length > 0 && (
+        <button type="button" className="roles-open-button" onClick={() => setShowingRoles(true)}>
+          Roles ({show.roles.length})
+        </button>
+      )}
 
       {editing && draft && (
         <Modal title="Edit Show" onClose={handleCancel} size="large">
@@ -201,9 +208,8 @@ export default function ShowDetail() {
         </Modal>
       )}
 
-      {show.roles.length > 0 && (
-        <div className="roles-panel">
-          <h2>Roles</h2>
+      {showingRoles && (
+        <Modal title="Roles" onClose={() => setShowingRoles(false)}>
           <div className="roles-panel-grid">
             {show.roles.map((r) => (
               <div key={r.id} className="roles-panel-item">
@@ -212,7 +218,7 @@ export default function ShowDetail() {
               </div>
             ))}
           </div>
-        </div>
+        </Modal>
       )}
 
       <RundownBuilder show={show} readOnly={!canEdit} />
