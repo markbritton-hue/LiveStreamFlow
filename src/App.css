@@ -1653,7 +1653,7 @@
   height: 50vh;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .asset-picker-paste-row {

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { AuthProvider, useAuth } from './auth/AuthProvider'
@@ -11,9 +12,27 @@ import OnlineUsers from './components/OnlineUsers'
 import { usePresence } from './presence/usePresence'
 import './App.css'
 
+type Theme = 'light' | 'dark'
+
+function useTheme() {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'light' || stored === 'dark') return stored
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  return { theme, toggleTheme: () => setTheme((t) => (t === 'dark' ? 'light' : 'dark')) }
+}
+
 function AppShell() {
   const { user, loading } = useAuth()
   usePresence(user)
+  const { theme, toggleTheme } = useTheme()
 
   if (loading) return <p>Loading…</p>
   if (!user) return <SignIn />
@@ -27,6 +46,15 @@ function AppShell() {
         <span className="app-user">
           <OnlineUsers currentUserEmail={user.email} />
           <BackButton />
+          <button
+            type="button"
+            className="link-button"
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
+          >
+            {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+          </button>
           <button type="button" className="link-button" onClick={() => signOut(auth)}>
             Sign out
           </button>

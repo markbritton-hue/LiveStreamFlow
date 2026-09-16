@@ -17,7 +17,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --text: #b8b9c2;
     --text-h: #f3f4f6;
     --bg: #14151a;
@@ -26,6 +26,16 @@
     --accent: #8f7dff;
     --accent-hover: #a495ff;
   }
+}
+
+:root[data-theme='dark'] {
+  --text: #b8b9c2;
+  --text-h: #f3f4f6;
+  --bg: #14151a;
+  --surface: #1c1d24;
+  --border: #2e303a;
+  --accent: #8f7dff;
+  --accent-hover: #a495ff;
 }
 
 * {
