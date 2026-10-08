@@ -15,6 +15,7 @@ export interface Show {
   assetsFolderUrl: string
   liveCurrentSegmentId: string
   roles: ShowRole[]
+  archived: boolean
 }
 
 export interface ShowRole {

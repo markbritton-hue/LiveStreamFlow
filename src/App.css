@@ -465,6 +465,15 @@
   margin-bottom: 16px;
 }
 
+.show-archived-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 16px;
+  font-size: 0.9rem;
+}
+
 .shows-list-header button {
   padding: 8px 14px;
   border: none;

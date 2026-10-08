@@ -8,7 +8,10 @@ import ShowsCalendar from './ShowsCalendar'
 
 export default function ShowsList() {
   const { user } = useAuth()
-  const { shows, loading } = useShows(user?.uid, user?.email)
+  const { shows: allShows, loading } = useShows(user?.uid, user?.email)
+  const [showArchived, setShowArchived] = useState(false)
+  const archivedCount = allShows.filter((s) => s.archived).length
+  const shows = showArchived ? allShows : allShows.filter((s) => !s.archived)
   const [showModal, setShowModal] = useState(false)
   const [title, setTitle] = useState('')
   const [scheduledAt, setScheduledAt] = useState('')
@@ -39,6 +42,16 @@ export default function ShowsList() {
     <div className="shows-list">
       <div className="shows-list-header">
         <h1>Shows</h1>
+        {archivedCount > 0 && (
+          <label className="show-archived-toggle">
+            <input
+              type="checkbox"
+              checked={showArchived}
+              onChange={(e) => setShowArchived(e.target.checked)}
+            />
+            Show archived ({archivedCount})
+          </label>
+        )}
         <button type="button" onClick={() => setShowModal(true)}>
           + New Show
         </button>
@@ -102,7 +115,11 @@ export default function ShowsList() {
       {loading ? (
         <p>Loading…</p>
       ) : shows.length === 0 ? (
-        <p>No shows yet. Create your first one above.</p>
+        <p>
+          {allShows.length === 0
+            ? 'No shows yet. Create your first one above.'
+            : 'All shows are archived. Tick "Show archived" to see them.'}
+        </p>
       ) : (
         <div className="shows-split">
           <div className="shows-list-pane">
@@ -114,7 +131,9 @@ export default function ShowsList() {
               >
                 <div className="show-card-top">
                   <span className="show-title">{show.title}</span>
-                  <span className={`show-status-badge status-${show.status}`}>{show.status}</span>
+                  <span className={`show-status-badge status-${show.status}`}>
+                    {show.archived ? 'archived' : show.status}
+                  </span>
                 </div>
 
                 <div className="show-card-row">

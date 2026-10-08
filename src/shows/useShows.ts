@@ -23,6 +23,7 @@ function toShow(d: { id: string; data: () => unknown }): Show {
     assetsFolderUrl: '',
     liveCurrentSegmentId: '',
     roles: [],
+    archived: false,
     ...(d.data() as Partial<Show>),
     id: d.id,
   } as Show
@@ -121,6 +122,7 @@ export async function createShow(input: {
     assetsFolderUrl: '',
     liveCurrentSegmentId: '',
     roles: makeDefaultShowRoles(),
+    archived: false,
   })
 }
 

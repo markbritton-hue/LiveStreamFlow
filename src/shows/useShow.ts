@@ -23,6 +23,7 @@ export function useShow(showId: string) {
               assetsFolderUrl: '',
               liveCurrentSegmentId: '',
               roles: [],
+              archived: false,
               ...(snap.data() as Partial<Show>),
               id: snap.id,
             } as Show)

@@ -64,10 +64,20 @@ export default function ShowDetail() {
       <div className="show-detail-top">
         <div className="show-title-block">
           <h1>{show.title}</h1>
+          {show.archived && <span className="view-only-badge">Archived</span>}
           {canEdit ? (
-            <button type="button" onClick={() => setEditing(true)}>
-              Edit Show
-            </button>
+            <>
+              <button type="button" onClick={() => setEditing(true)}>
+                Edit Show
+              </button>
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => updateShow(show.id, { archived: !show.archived })}
+              >
+                {show.archived ? 'Unarchive' : 'Archive'}
+              </button>
+            </>
           ) : (
             <span className="view-only-badge">View only</span>
           )}
